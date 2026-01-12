@@ -1,0 +1,18 @@
+[
+  {
+    "id_rol": 1,
+    "nombre": "ADMIN"
+  },
+  {
+    "id_rol": 2,
+    "nombre": "Empresa"
+  },
+  {
+    "id_rol": 3,
+    "nombre": "Inspector"
+  },
+  {
+    "id_rol": 4,
+    "nombre": "Auditor"
+  }
+]

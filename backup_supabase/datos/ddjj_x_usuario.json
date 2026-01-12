@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "id_ddjj": 3,
+    "id_usuario": 11,
+    "tipo_asignacion": "Inspector",
+    "created_at": "2026-01-05T15:49:38.989603+00:00"
+  },
+  {
+    "id": 2,
+    "id_ddjj": 2,
+    "id_usuario": 4,
+    "tipo_asignacion": "Inspector",
+    "created_at": "2026-01-02T15:51:37.318952+00:00"
+  },
+  {
+    "id": 3,
+    "id_ddjj": 3,
+    "id_usuario": 9,
+    "tipo_asignacion": "Auditor",
+    "created_at": "2026-01-05T15:48:36.900148+00:00"
+  },
+  {
+    "id": 4,
+    "id_ddjj": 2,
+    "id_usuario": 13,
+    "tipo_asignacion": "Auditor",
+    "created_at": "2026-01-02T16:44:19.547943+00:00"
+  }
+]

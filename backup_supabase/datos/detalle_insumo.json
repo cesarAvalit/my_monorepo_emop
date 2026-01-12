@@ -1,0 +1,32 @@
+[
+  {
+    "id_detalle": 1,
+    "id_orden": 1,
+    "id_insumo": 6,
+    "cantidad": 2,
+    "created_at": "2025-12-30T17:47:27.818689+00:00",
+    "id_detalle_insumo": null,
+    "costo_unitario_historico": 121466,
+    "costo_total": 242932
+  },
+  {
+    "id_detalle": 2,
+    "id_orden": 2,
+    "id_insumo": 15,
+    "cantidad": 1,
+    "created_at": "2025-12-30T20:22:57.246191+00:00",
+    "id_detalle_insumo": null,
+    "costo_unitario_historico": 80616,
+    "costo_total": 80616
+  },
+  {
+    "id_detalle": 3,
+    "id_orden": 3,
+    "id_insumo": 4,
+    "cantidad": 1,
+    "created_at": "2026-01-02T19:25:01.673769+00:00",
+    "id_detalle_insumo": null,
+    "costo_unitario_historico": 47496,
+    "costo_total": 47496
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id_tipo": 1,
+    "descripcion": "Preventivo"
+  },
+  {
+    "id_tipo": 2,
+    "descripcion": "Correctivo"
+  },
+  {
+    "id_tipo": 3,
+    "descripcion": "Operativo"
+  }
+]

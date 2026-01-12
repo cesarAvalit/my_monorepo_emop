@@ -1,0 +1,154 @@
+[
+  {
+    "id_empresa": 2,
+    "nombre_empresa": "Transporte Estrella del Sur",
+    "cuit": "30-23456789-0",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 3,
+    "nombre_empresa": "Autobuses Cóndor",
+    "cuit": "30-34567890-1",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 4,
+    "nombre_empresa": "Líneas Doradas",
+    "cuit": "30-45678901-2",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 5,
+    "nombre_empresa": "Transporte Horizonte",
+    "cuit": "30-56789012-3",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 6,
+    "nombre_empresa": "Buses Veloz Express",
+    "cuit": "30-67890123-4",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 7,
+    "nombre_empresa": "Transportes del Sol",
+    "cuit": "30-78901234-5",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 8,
+    "nombre_empresa": "Líneas Azules",
+    "cuit": "30-89012345-6",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 9,
+    "nombre_empresa": "Autobuses Premium",
+    "cuit": "30-90123456-7",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 10,
+    "nombre_empresa": "Transporte Ruta Segura",
+    "cuit": "30-01234567-8",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 11,
+    "nombre_empresa": "Buses del Amanecer",
+    "cuit": "30-12345098-7",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 12,
+    "nombre_empresa": "Líneas Verdes",
+    "cuit": "30-23456109-8",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 13,
+    "nombre_empresa": "Transporte Montaña",
+    "cuit": "30-34567210-9",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 15,
+    "nombre_empresa": "Transportes del Viento",
+    "cuit": "30-56789432-1",
+    "codigo_empresa": null,
+    "email": null,
+    "telefono": null
+  },
+  {
+    "id_empresa": 17,
+    "nombre_empresa": "Tranporte Flash bus",
+    "cuit": "20298504783",
+    "codigo_empresa": "COD36698",
+    "email": "flasbus@empresa.com",
+    "telefono": "3478523300"
+  },
+  {
+    "id_empresa": 1,
+    "nombre_empresa": "Rápidos del Oeste",
+    "cuit": "30-12345678-9",
+    "codigo_empresa": "COD-99850",
+    "email": "rapioeste@empresa.com",
+    "telefono": "38963258"
+  },
+  {
+    "id_empresa": 18,
+    "nombre_empresa": "Norte coop Ltda",
+    "cuit": "2029882555",
+    "codigo_empresa": "COD-259963",
+    "email": "nortecoop@empresa.ar",
+    "telefono": "5489632214"
+  },
+  {
+    "id_empresa": 19,
+    "nombre_empresa": "La nueva del sur",
+    "cuit": "2229563322",
+    "codigo_empresa": "COD-225588",
+    "email": "lanueva@empresa.ar",
+    "telefono": "2633554578"
+  },
+  {
+    "id_empresa": 20,
+    "nombre_empresa": "Rayo bus SA",
+    "cuit": "2156412653",
+    "codigo_empresa": "COD-896532",
+    "email": "rayo@empresa.ar",
+    "telefono": "3402215566"
+  },
+  {
+    "id_empresa": 14,
+    "nombre_empresa": "Autobuses Relámpago",
+    "cuit": "30-45678321-0",
+    "codigo_empresa": "COD-22154",
+    "email": "relampago@empresa.com",
+    "telefono": "056982588"
+  }
+]

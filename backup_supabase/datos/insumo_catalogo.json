@@ -1,0 +1,92 @@
+[
+  {
+    "id_insumo": 1,
+    "codigo_inventario": "INV-001",
+    "descripcion": "Aceite Motor 15W40 - 5L",
+    "costo_unitario": 250.81
+  },
+  {
+    "id_insumo": 2,
+    "codigo_inventario": "INV-002",
+    "descripcion": "Filtro de Aceite",
+    "costo_unitario": 1341.3
+  },
+  {
+    "id_insumo": 3,
+    "codigo_inventario": "INV-003",
+    "descripcion": "Filtro de Aire",
+    "costo_unitario": 4577.39
+  },
+  {
+    "id_insumo": 4,
+    "codigo_inventario": "INV-004",
+    "descripcion": "Filtro de Combustible",
+    "costo_unitario": 474.96
+  },
+  {
+    "id_insumo": 5,
+    "codigo_inventario": "INV-005",
+    "descripcion": "Pastillas de Freno Delanteras",
+    "costo_unitario": 4105.13
+  },
+  {
+    "id_insumo": 6,
+    "codigo_inventario": "INV-006",
+    "descripcion": "Pastillas de Freno Traseras",
+    "costo_unitario": 1214.66
+  },
+  {
+    "id_insumo": 7,
+    "codigo_inventario": "INV-007",
+    "descripcion": "Discos de Freno",
+    "costo_unitario": 822.47
+  },
+  {
+    "id_insumo": 8,
+    "codigo_inventario": "INV-008",
+    "descripcion": "Batería 12V 180Ah",
+    "costo_unitario": 64.05
+  },
+  {
+    "id_insumo": 9,
+    "codigo_inventario": "INV-009",
+    "descripcion": "Neumático 275/70 R22.5",
+    "costo_unitario": 2837.74
+  },
+  {
+    "id_insumo": 10,
+    "codigo_inventario": "INV-010",
+    "descripcion": "Cámara de Aire 22.5",
+    "costo_unitario": 595.92
+  },
+  {
+    "id_insumo": 11,
+    "codigo_inventario": "INV-011",
+    "descripcion": "Líquido de Frenos DOT 4",
+    "costo_unitario": 2597.14
+  },
+  {
+    "id_insumo": 12,
+    "codigo_inventario": "INV-012",
+    "descripcion": "Refrigerante Anticongelante",
+    "costo_unitario": 4876.48
+  },
+  {
+    "id_insumo": 13,
+    "codigo_inventario": "INV-013",
+    "descripcion": "Correa de Distribución",
+    "costo_unitario": 310.69
+  },
+  {
+    "id_insumo": 14,
+    "codigo_inventario": "INV-014",
+    "descripcion": "Bomba de Agua",
+    "costo_unitario": 4626.34
+  },
+  {
+    "id_insumo": 15,
+    "codigo_inventario": "INV-015",
+    "descripcion": "Radiador",
+    "costo_unitario": 806.16
+  }
+]

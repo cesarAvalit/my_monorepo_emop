@@ -1,0 +1,53 @@
+[
+  {
+    "id_inspeccion": 2,
+    "id_usuario": 4,
+    "id_orden_trabajo": 1,
+    "licencia_correcto": true,
+    "rto_correcto": true,
+    "seguro_correcto": true,
+    "aire_acondicionado_correcto": true,
+    "calefaccion_correcto": true,
+    "camara_correcto": true,
+    "observaciones": "Todo bien testing",
+    "fecha_creacion": "2026-01-02T16:41:03.163315+00:00",
+    "created_at": "2026-01-02T16:41:03.163315+00:00",
+    "updated_at": "2026-01-02T16:41:03.163315+00:00",
+    "id_ddjj": 2,
+    "conformidad": true
+  },
+  {
+    "id_inspeccion": 3,
+    "id_usuario": 11,
+    "id_orden_trabajo": 2,
+    "licencia_correcto": true,
+    "rto_correcto": true,
+    "seguro_correcto": true,
+    "aire_acondicionado_correcto": true,
+    "calefaccion_correcto": true,
+    "camara_correcto": true,
+    "observaciones": null,
+    "fecha_creacion": "2026-01-05T17:25:17.026754+00:00",
+    "created_at": "2026-01-05T17:25:17.026754+00:00",
+    "updated_at": "2026-01-05T17:25:17.026754+00:00",
+    "id_ddjj": 3,
+    "conformidad": false
+  },
+  {
+    "id_inspeccion": 4,
+    "id_usuario": 11,
+    "id_orden_trabajo": 3,
+    "licencia_correcto": true,
+    "rto_correcto": true,
+    "seguro_correcto": true,
+    "aire_acondicionado_correcto": true,
+    "calefaccion_correcto": false,
+    "camara_correcto": false,
+    "observaciones": "Testing NO CONFORME",
+    "fecha_creacion": "2026-01-07T13:12:04.98739+00:00",
+    "created_at": "2026-01-07T13:12:04.98739+00:00",
+    "updated_at": "2026-01-07T13:12:04.98739+00:00",
+    "id_ddjj": null,
+    "conformidad": true
+  }
+]

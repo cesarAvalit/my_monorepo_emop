@@ -1,0 +1,14 @@
+[
+  {
+    "id_orden": 1,
+    "id_mecanico": 6
+  },
+  {
+    "id_orden": 2,
+    "id_mecanico": 15
+  },
+  {
+    "id_orden": 3,
+    "id_mecanico": 6
+  }
+]

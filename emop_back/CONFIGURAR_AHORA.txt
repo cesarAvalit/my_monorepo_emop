@@ -1,0 +1,35 @@
+================================================================================
+⚠️  IMPORTANTE: Debes configurar pg_hba.conf para que funcione
+================================================================================
+
+El backend ahora está configurado para NO usar contraseña, pero PostgreSQL
+aún requiere autenticación. Necesitas configurar pg_hba.conf:
+
+PASO 1: Configurar pg_hba.conf
+-------------------------------
+Ejecuta este comando en tu terminal:
+
+  sudo nano /etc/postgresql/16/main/pg_hba.conf
+
+Busca esta línea:
+  host    all             all             127.0.0.1/32            md5
+
+Cámbiala a:
+  host    all             all             127.0.0.1/32            trust
+
+Guarda: Ctrl+X, luego Y, luego Enter
+
+PASO 2: Reiniciar PostgreSQL
+-----------------------------
+  sudo systemctl restart postgresql
+
+PASO 3: Reiniciar el backend
+-----------------------------
+  npm run dev
+
+================================================================================
+
+O ejecuta el script automático (requiere sudo):
+  ./scripts/fix_auth_rapido.sh
+
+================================================================================

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "id_tipo_notificacion": 1,
+    "id_usuario": 12,
+    "fecha_hora": "2026-01-01T13:54:07.955+00:00",
+    "nota": "El RTO del vehículo Matrícula ABC-003, RTO 123FE001789AS12580I, Venció el día 19/11/25",
+    "visto": false,
+    "created_at": "2026-01-01T13:54:08.164261+00:00",
+    "updated_at": "2026-01-01T13:54:08.164261+00:00"
+  },
+  {
+    "id": 2,
+    "id_tipo_notificacion": 1,
+    "id_usuario": 18,
+    "fecha_hora": "2026-01-01T13:54:07.955+00:00",
+    "nota": "El RTO del vehículo Matrícula STU-901, RTO 123FE007789AS12580I, Venció el día 06/08/25",
+    "visto": false,
+    "created_at": "2026-01-01T13:54:08.408471+00:00",
+    "updated_at": "2026-01-01T13:54:08.408471+00:00"
+  },
+  {
+    "id": 3,
+    "id_tipo_notificacion": 1,
+    "id_usuario": 19,
+    "fecha_hora": "2026-01-01T13:54:07.955+00:00",
+    "nota": "El RTO del vehículo Matrícula STU-901, RTO 123FE007789AS12580I, Venció el día 06/08/25",
+    "visto": false,
+    "created_at": "2026-01-01T13:54:08.931263+00:00",
+    "updated_at": "2026-01-01T13:54:08.931263+00:00"
+  },
+  {
+    "id": 4,
+    "id_tipo_notificacion": 1,
+    "id_usuario": 20,
+    "fecha_hora": "2026-01-01T13:54:07.955+00:00",
+    "nota": "El RTO del vehículo Matrícula STU-901, RTO 123FE007789AS12580I, Venció el día 06/08/25",
+    "visto": false,
+    "created_at": "2026-01-01T13:54:09.224714+00:00",
+    "updated_at": "2026-01-01T13:54:09.224714+00:00"
+  },
+  {
+    "id": 5,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 9,
+    "fecha_hora": "2026-01-01T17:55:10.832+00:00",
+    "nota": "N OT: 602571, Matrícula: AVA-550, Empresa: Transportes del Viento, Fecha Ingreso: 23/12/2025, Estado: Correcto",
+    "visto": false,
+    "created_at": "2026-01-01T17:55:11.739175+00:00",
+    "updated_at": "2026-01-01T17:55:11.739175+00:00"
+  },
+  {
+    "id": 7,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 9,
+    "fecha_hora": "2026-01-01T18:06:28.244+00:00",
+    "nota": "N OT: 602570, Matrícula: VWX-234, Empresa: Líneas Verdes, Fecha Ingreso: 30/12/2025, Estado: Preventivo",
+    "visto": false,
+    "created_at": "2026-01-01T18:06:29.196973+00:00",
+    "updated_at": "2026-01-01T18:06:29.196973+00:00"
+  },
+  {
+    "id": 9,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 4,
+    "fecha_hora": "2026-01-02T15:51:37.45+00:00",
+    "nota": "N OT: 602570, Matrícula: VWX-234, Empresa: Líneas Verdes, Fecha Ingreso: 30/12/2025, Estado: Preventivo",
+    "visto": true,
+    "created_at": "2026-01-02T15:51:37.743895+00:00",
+    "updated_at": "2026-01-02T15:51:37.743895+00:00"
+  },
+  {
+    "id": 10,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 13,
+    "fecha_hora": "2026-01-02T16:44:19.48+00:00",
+    "nota": "N OT: 602570, Matrícula: VWX-234, Empresa: Líneas Verdes, Fecha Ingreso: 30/12/2025, Estado: Preventivo",
+    "visto": true,
+    "created_at": "2026-01-02T16:44:19.991425+00:00",
+    "updated_at": "2026-01-02T16:44:19.991425+00:00"
+  },
+  {
+    "id": 11,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 9,
+    "fecha_hora": "2026-01-05T15:48:36.979+00:00",
+    "nota": "N OT: 602571, Matrícula: AVA-550, Empresa: Transportes del Viento, Fecha Ingreso: 23/12/2025, Estado: Correcto",
+    "visto": false,
+    "created_at": "2026-01-05T15:48:37.201696+00:00",
+    "updated_at": "2026-01-05T15:48:37.201696+00:00"
+  },
+  {
+    "id": 12,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 11,
+    "fecha_hora": "2026-01-05T15:49:39.113+00:00",
+    "nota": "N OT: 602571, Matrícula: AVA-550, Empresa: Transportes del Viento, Fecha Ingreso: 23/12/2025, Estado: Correcto",
+    "visto": true,
+    "created_at": "2026-01-05T15:49:39.383573+00:00",
+    "updated_at": "2026-01-05T15:49:39.383573+00:00"
+  },
+  {
+    "id": 13,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 13,
+    "fecha_hora": "2026-01-07T13:08:31.422+00:00",
+    "nota": "N OT: 602572, Matrícula: VWX-234, Empresa: Líneas Verdes, Fecha Ingreso: 09/01/2026, Estado: Preventivo",
+    "visto": false,
+    "created_at": "2026-01-07T13:08:31.635522+00:00",
+    "updated_at": "2026-01-07T13:08:31.635522+00:00"
+  },
+  {
+    "id": 14,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 11,
+    "fecha_hora": "2026-01-07T13:09:43.433+00:00",
+    "nota": "N OT: 602572, Matrícula: VWX-234, Empresa: Líneas Verdes, Fecha Ingreso: 09/01/2026, Estado: Preventivo",
+    "visto": true,
+    "created_at": "2026-01-07T13:09:43.64303+00:00",
+    "updated_at": "2026-01-07T13:09:43.64303+00:00"
+  },
+  {
+    "id": 8,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 11,
+    "fecha_hora": "2026-01-01T18:06:41.898+00:00",
+    "nota": "N OT: 602571, Matrícula: AVA-550, Empresa: Transportes del Viento, Fecha Ingreso: 23/12/2025, Estado: Correcto",
+    "visto": true,
+    "created_at": "2026-01-01T18:06:42.767405+00:00",
+    "updated_at": "2026-01-01T18:06:42.767405+00:00"
+  },
+  {
+    "id": 6,
+    "id_tipo_notificacion": 3,
+    "id_usuario": 11,
+    "fecha_hora": "2026-01-01T18:02:52.288+00:00",
+    "nota": "N OT: 602571, Matrícula: AVA-550, Empresa: Transportes del Viento, Fecha Ingreso: 23/12/2025, Estado: Correcto",
+    "visto": true,
+    "created_at": "2026-01-01T18:02:53.290898+00:00",
+    "updated_at": "2026-01-01T18:02:53.290898+00:00"
+  }
+]
