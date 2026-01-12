@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#2EA7D8"/>
+  <!-- Bus body -->
+  <path d="M34 28h60c10 0 18 8 18 18v40c0 8-6 14-14 14H30c-8 0-14-6-14-14V46c0-10 8-18 18-18z" fill="#ffffff" opacity="0.95"/>
+  <!-- Windshield -->
+  <rect x="40" y="40" width="48" height="24" rx="6" fill="#2C7FB8" opacity="0.9"/>
+  <!-- Side windows -->
+  <rect x="28" y="40" width="10" height="20" rx="4" fill="#ffffff" opacity="0.9"/>
+  <rect x="90" y="40" width="10" height="20" rx="4" fill="#ffffff" opacity="0.9"/>
+  <!-- Door / info lines -->
+  <rect x="44" y="68" width="20" height="16" rx="3" fill="#2C7FB8" opacity="0.85"/>
+  <rect x="68" y="70" width="22" height="4" rx="2" fill="#2C7FB8" opacity="0.85"/>
+  <rect x="68" y="78" width="26" height="4" rx="2" fill="#2C7FB8" opacity="0.85"/>
+  <!-- Wheels -->
+  <circle cx="44" cy="96" r="10" fill="#1F2937"/>
+  <circle cx="84" cy="96" r="10" fill="#1F2937"/>
+  <circle cx="44" cy="96" r="4" fill="#9CA3AF"/>
+  <circle cx="84" cy="96" r="4" fill="#9CA3AF"/>
+</svg>
+
+
+
+
+
+

@@ -1,0 +1,1939 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "emop_admin@mendoza.ar",
+      "password": "Admin1234",
+      "id_rol": 1,
+      "id_empresa": 1,
+      "name": "EMOP Administrator",
+      "email": "emop_admin@mendoza.ar",
+      "rol": "ADMINISTRADOR"
+    }
+  ],
+  "roles": [
+    {
+      "id": 1,
+      "name": "ADMINISTRADOR",
+      "description": "Administrator role"
+    }
+  ],
+  "companies": [
+    {
+      "id": 1,
+      "name": "EMOP",
+      "description": "Ente de la Movilidad Provincial"
+    }
+  ],
+  "empresa": [
+    {
+      "id_empresa": 1,
+      "nombre_empresa": "Rápidos del Oeste",
+      "cuit": "30-12345678-9",
+      "id_grupo": 1
+    },
+    {
+      "id_empresa": 2,
+      "nombre_empresa": "Transporte Estrella del Sur",
+      "cuit": "30-23456789-0",
+      "id_grupo": 1
+    },
+    {
+      "id_empresa": 3,
+      "nombre_empresa": "Autobuses Cóndor",
+      "cuit": "30-34567890-1",
+      "id_grupo": 2
+    },
+    {
+      "id_empresa": 4,
+      "nombre_empresa": "Líneas Doradas",
+      "cuit": "30-45678901-2",
+      "id_grupo": 2
+    },
+    {
+      "id_empresa": 5,
+      "nombre_empresa": "Transporte Horizonte",
+      "cuit": "30-56789012-3",
+      "id_grupo": 1
+    },
+    {
+      "id_empresa": 6,
+      "nombre_empresa": "Buses Veloz Express",
+      "cuit": "30-67890123-4",
+      "id_grupo": 3
+    },
+    {
+      "id_empresa": 7,
+      "nombre_empresa": "Transportes del Sol",
+      "cuit": "30-78901234-5",
+      "id_grupo": 3
+    },
+    {
+      "id_empresa": 8,
+      "nombre_empresa": "Líneas Azules",
+      "cuit": "30-89012345-6",
+      "id_grupo": 1
+    },
+    {
+      "id_empresa": 9,
+      "nombre_empresa": "Autobuses Premium",
+      "cuit": "30-90123456-7",
+      "id_grupo": 2
+    },
+    {
+      "id_empresa": 10,
+      "nombre_empresa": "Transporte Ruta Segura",
+      "cuit": "30-01234567-8",
+      "id_grupo": 2
+    },
+    {
+      "id_empresa": 11,
+      "nombre_empresa": "Buses del Amanecer",
+      "cuit": "30-12345098-7",
+      "id_grupo": 3
+    },
+    {
+      "id_empresa": 12,
+      "nombre_empresa": "Líneas Verdes",
+      "cuit": "30-23456109-8",
+      "id_grupo": 1
+    },
+    {
+      "id_empresa": 13,
+      "nombre_empresa": "Transporte Montaña",
+      "cuit": "30-34567210-9",
+      "id_grupo": 3
+    },
+    {
+      "id_empresa": 14,
+      "nombre_empresa": "Autobuses Relámpago",
+      "cuit": "30-45678321-0",
+      "id_grupo": 2
+    },
+    {
+      "id_empresa": 15,
+      "nombre_empresa": "Transportes del Viento",
+      "cuit": "30-56789432-1",
+      "id_grupo": 1
+    }
+  ],
+  "vehiculo": [
+    {
+      "id": 1,
+      "id_vehiculo": 1,
+      "id_empresa": 1,
+      "interno": "INT-001",
+      "matricula": "ABC-003",
+      "marca": "Mercedes Benz",
+      "modelo": "OH-1418",
+      "anio": 2018,
+      "kilometros": 150000,
+      "tipo_servicio": "Urbano",
+      "nombre_seguro": "Rivadavia",
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2026-08-14T00:00:00.000Z",
+      "fecha_ultima_rto": "2025-11-19T00:00:00.000Z",
+      "id_conductor_activo": 1,
+      "activo": true,
+      "posee_ac": true,
+      "posee_camara": true,
+      "equipamiento_atributos": {}
+    },
+    {
+      "id": 3,
+      "id_vehiculo": 3,
+      "id_empresa": 2,
+      "interno": "INT-003",
+      "matricula": "GHI-789",
+      "marca": "Volvo",
+      "modelo": "B270R",
+      "posee_ac": true,
+      "posee_camara": false,
+      "id_conductor_activo": 3,
+      "fecha_ultima_rto": "2027-05-03T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": false,
+        "aire_acondicionado": true,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Terceros",
+      "fecha_vencimiento_seguro": "2025-12-18T00:00:00.000Z",
+      "activo": true,
+      "anio": 2021,
+      "kilometros": 180000
+    },
+    {
+      "id": 4,
+      "id_vehiculo": 4,
+      "id_empresa": 2,
+      "interno": "INT-004",
+      "matricula": "JKL-012",
+      "marca": "Mercedes Benz",
+      "modelo": "OF-1722",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 4,
+      "fecha_ultima_rto": "2028-01-30T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Urbano",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": true
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2026-07-14T00:00:00.000Z",
+      "activo": true,
+      "anio": 2019,
+      "kilometros": 234000
+    },
+    {
+      "id": 5,
+      "id_vehiculo": 5,
+      "id_empresa": 3,
+      "interno": "INT-005",
+      "matricula": "MNO-345",
+      "marca": "Iveco",
+      "modelo": "Daily",
+      "posee_ac": false,
+      "posee_camara": false,
+      "id_conductor_activo": 5,
+      "fecha_ultima_rto": "2027-11-12T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": false,
+        "aire_acondicionado": false,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Responsabilidad civil",
+      "fecha_vencimiento_seguro": "2025-06-28T00:00:00.000Z",
+      "activo": true,
+      "anio": 2020,
+      "kilometros": 178000
+    },
+    {
+      "id": 6,
+      "id_vehiculo": 6,
+      "id_empresa": 3,
+      "interno": "INT-006",
+      "matricula": "PQR-678",
+      "marca": "Scania",
+      "modelo": "K310",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 6,
+      "fecha_ultima_rto": "2026-04-19T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2028-02-05T00:00:00.000Z",
+      "activo": true,
+      "anio": 2025,
+      "kilometros": 230000
+    },
+    {
+      "id": 7,
+      "id_vehiculo": 7,
+      "id_empresa": 4,
+      "interno": "INT-007",
+      "matricula": "STU-901",
+      "marca": "Mercedes Benz",
+      "modelo": "OH-1625",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 7,
+      "fecha_ultima_rto": "2025-08-07T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Urbano",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2027-09-25T00:00:00.000Z",
+      "activo": true,
+      "anio": 2017,
+      "kilometros": 280000
+    },
+    {
+      "id": 8,
+      "id_vehiculo": 8,
+      "id_empresa": 4,
+      "interno": "INT-008",
+      "matricula": "VWX-234",
+      "marca": "Volvo",
+      "modelo": "B290R",
+      "posee_ac": true,
+      "posee_camara": false,
+      "id_conductor_activo": 8,
+      "fecha_ultima_rto": "2028-06-22T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": false,
+        "aire_acondicionado": true,
+        "calefaccion": true
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2026-01-15T00:00:00.000Z",
+      "activo": true,
+      "anio": 2022,
+      "kilometros": 195000
+    },
+    {
+      "id": 9,
+      "id_vehiculo": 9,
+      "id_empresa": 5,
+      "interno": "INT-009",
+      "matricula": "YZA-567",
+      "marca": "Scania",
+      "modelo": "K250",
+      "posee_ac": false,
+      "posee_camara": true,
+      "id_conductor_activo": 9,
+      "fecha_ultima_rto": "2025-03-18T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": false,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Terceros",
+      "fecha_vencimiento_seguro": "2027-12-10T00:00:00.000Z",
+      "activo": true,
+      "anio": 2016,
+      "kilometros": 310000
+    },
+    {
+      "id": 10,
+      "id_vehiculo": 10,
+      "id_empresa": 5,
+      "interno": "INT-010",
+      "matricula": "BCD-890",
+      "marca": "Mercedes Benz",
+      "modelo": "OF-1418",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 10,
+      "fecha_ultima_rto": "2026-07-08T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Urbano",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": true
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2028-05-30T00:00:00.000Z",
+      "activo": true,
+      "anio": 2023,
+      "kilometros": 145000
+    },
+    {
+      "id": 11,
+      "id_vehiculo": 11,
+      "id_empresa": 6,
+      "interno": "INT-011",
+      "matricula": "EFG-123",
+      "marca": "Iveco",
+      "modelo": "Tector",
+      "posee_ac": false,
+      "posee_camara": false,
+      "id_conductor_activo": 11,
+      "fecha_ultima_rto": "2028-03-14T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": false,
+        "aire_acondicionado": false,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Responsabilidad civil",
+      "fecha_vencimiento_seguro": "2025-10-03T00:00:00.000Z",
+      "activo": true,
+      "anio": 2015,
+      "kilometros": 350000
+    },
+    {
+      "id": 12,
+      "id_vehiculo": 12,
+      "id_empresa": 6,
+      "interno": "INT-012",
+      "matricula": "HIJ-456",
+      "marca": "Volvo",
+      "modelo": "B340R",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 12,
+      "fecha_ultima_rto": "2025-09-25T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2027-04-20T00:00:00.000Z",
+      "activo": true,
+      "anio": 2020,
+      "kilometros": 210000
+    },
+    {
+      "id": 13,
+      "id_vehiculo": 13,
+      "id_empresa": 7,
+      "interno": "INT-013",
+      "matricula": "KLM-789",
+      "marca": "Scania",
+      "modelo": "K320",
+      "posee_ac": true,
+      "posee_camara": true,
+      "id_conductor_activo": 13,
+      "fecha_ultima_rto": "2028-08-17T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": true,
+        "calefaccion": true
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2026-11-08T00:00:00.000Z",
+      "activo": true,
+      "anio": 2021,
+      "kilometros": 165000
+    },
+    {
+      "id": 14,
+      "id_vehiculo": 14,
+      "id_empresa": 7,
+      "interno": "INT-014",
+      "matricula": "NOP-012",
+      "marca": "Mercedes Benz",
+      "modelo": "OH-1722",
+      "posee_ac": true,
+      "posee_camara": false,
+      "id_conductor_activo": 14,
+      "fecha_ultima_rto": "2025-12-28T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Urbano",
+      "equipamiento_atributos": {
+        "camaras_seguridad": false,
+        "aire_acondicionado": true,
+        "calefaccion": false
+      },
+      "tipo_seguro_cobertura": "Terceros",
+      "fecha_vencimiento_seguro": "2028-01-12T00:00:00.000Z",
+      "activo": true,
+      "anio": 2019,
+      "kilometros": 245000
+    },
+    {
+      "id": 15,
+      "id_vehiculo": 15,
+      "id_empresa": 8,
+      "interno": "INT-015",
+      "matricula": "QRS-345",
+      "marca": "Iveco",
+      "modelo": "Daily 50C",
+      "posee_ac": false,
+      "posee_camara": true,
+      "id_conductor_activo": 15,
+      "fecha_ultima_rto": "2026-02-11T00:00:00.000Z",
+      "nombre_seguro": "Rivadavia",
+      "tipo_servicio": "Larga distancia",
+      "equipamiento_atributos": {
+        "camaras_seguridad": true,
+        "aire_acondicionado": false,
+        "calefaccion": true
+      },
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2027-07-19T00:00:00.000Z",
+      "activo": true,
+      "anio": 2018,
+      "kilometros": 192000
+    },
+    {
+      "id": 16,
+      "id_vehiculo": 16,
+      "id_empresa": 2,
+      "interno": "INT-982",
+      "matricula": "CRS-982",
+      "marca": "Iveco",
+      "modelo": "IV-CO200",
+      "anio": 2024,
+      "kilometros": 15000,
+      "tipo_servicio": "Urbano",
+      "nombre_seguro": "Sancor",
+      "tipo_seguro_cobertura": "Todo riesgo",
+      "fecha_vencimiento_seguro": "2026-12-20T00:00:00.000Z",
+      "fecha_ultima_rto": "2028-12-20T00:00:00.000Z",
+      "id_conductor_activo": 1,
+      "activo": true,
+      "posee_ac": true,
+      "posee_camara": false,
+      "equipamiento_atributos": {}
+    },
+    {
+      "id": 17,
+      "id_vehiculo": 17,
+      "id_empresa": 1,
+      "interno": "201",
+      "matricula": "AB123CD",
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": 2022,
+      "kilometros": 45000,
+      "tipo_servicio": "Logística",
+      "id_conductor_activo": 1,
+      "activo": true,
+      "posee_ac": true,
+      "posee_camara": true,
+      "nombre_seguro": "La Segunda",
+      "tipo_seguro_cobertura": "Todo Riesgo",
+      "fecha_vencimiento_seguro": "2025-12-01T00:00:00.000Z",
+      "fecha_ultima_rto": "2024-05-15T00:00:00.000Z",
+      "equipamiento_atributos": {}
+    }
+  ],
+  "conductor": [
+    {
+      "id_conductor": 1,
+      "id_empresa": 1,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "fecha_vencimiento_licencia": "2025-08-15T00:00:00.000Z",
+      "numero_licencia": "LIC-0001",
+      "dni": "20012345",
+      "telefono": "261-1000037",
+      "activo": true
+    },
+    {
+      "id_conductor": 2,
+      "id_empresa": 1,
+      "nombre": "Carlos",
+      "apellido": "González",
+      "fecha_vencimiento_licencia": "2025-03-20T00:00:00.000Z",
+      "numero_licencia": "LIC-0002",
+      "dni": "20024690",
+      "telefono": "261-1000074",
+      "activo": true
+    },
+    {
+      "id_conductor": 3,
+      "id_empresa": 2,
+      "nombre": "Luis",
+      "apellido": "Martínez",
+      "fecha_vencimiento_licencia": "2024-12-10T00:00:00.000Z",
+      "numero_licencia": "LIC-0003",
+      "dni": "20037035",
+      "telefono": "261-1000111",
+      "activo": true
+    },
+    {
+      "id_conductor": 4,
+      "id_empresa": 2,
+      "nombre": "Pedro",
+      "apellido": "Rodríguez",
+      "fecha_vencimiento_licencia": "2025-06-30T00:00:00.000Z",
+      "numero_licencia": "LIC-0004",
+      "dni": "20049380",
+      "telefono": "261-1000148",
+      "activo": true
+    },
+    {
+      "id_conductor": 5,
+      "id_empresa": 3,
+      "nombre": "Miguel",
+      "apellido": "Fernández",
+      "fecha_vencimiento_licencia": "2025-01-25T00:00:00.000Z",
+      "numero_licencia": "LIC-0005",
+      "dni": "20061725",
+      "telefono": "261-1000185",
+      "activo": true
+    },
+    {
+      "id_conductor": 6,
+      "id_empresa": 3,
+      "nombre": "Roberto",
+      "apellido": "López",
+      "fecha_vencimiento_licencia": "2025-09-12T00:00:00.000Z",
+      "numero_licencia": "LIC-0006",
+      "dni": "20074070",
+      "telefono": "261-1000222",
+      "activo": true
+    },
+    {
+      "id_conductor": 7,
+      "id_empresa": 4,
+      "nombre": "Fernando",
+      "apellido": "Sánchez",
+      "fecha_vencimiento_licencia": "2025-04-18T00:00:00.000Z",
+      "numero_licencia": "LIC-0007",
+      "dni": "20086415",
+      "telefono": "261-1000259",
+      "activo": true
+    },
+    {
+      "id_conductor": 8,
+      "id_empresa": 4,
+      "nombre": "Alejandro",
+      "apellido": "Ramírez",
+      "fecha_vencimiento_licencia": "2024-11-30T00:00:00.000Z",
+      "numero_licencia": "LIC-0008",
+      "dni": "20098760",
+      "telefono": "261-1000296",
+      "activo": true
+    },
+    {
+      "id_conductor": 9,
+      "id_empresa": 5,
+      "nombre": "Diego",
+      "apellido": "Torres",
+      "fecha_vencimiento_licencia": "2025-07-05T00:00:00.000Z",
+      "numero_licencia": "LIC-0009",
+      "dni": "20111105",
+      "telefono": "261-1000333",
+      "activo": true
+    },
+    {
+      "id_conductor": 10,
+      "id_empresa": 5,
+      "nombre": "Jorge",
+      "apellido": "Flores",
+      "fecha_vencimiento_licencia": "2025-02-14T00:00:00.000Z",
+      "numero_licencia": "LIC-0010",
+      "dni": "20123450",
+      "telefono": "261-1000370",
+      "activo": true
+    },
+    {
+      "id_conductor": 11,
+      "id_empresa": 6,
+      "nombre": "Ricardo",
+      "apellido": "Vargas",
+      "fecha_vencimiento_licencia": "2025-10-20T00:00:00.000Z",
+      "numero_licencia": "LIC-0011",
+      "dni": "20135795",
+      "telefono": "261-1000407",
+      "activo": true
+    },
+    {
+      "id_conductor": 12,
+      "id_empresa": 6,
+      "nombre": "Héctor",
+      "apellido": "Mendoza",
+      "fecha_vencimiento_licencia": "2025-05-08T00:00:00.000Z",
+      "numero_licencia": "LIC-0012",
+      "dni": "20148140",
+      "telefono": "261-1000444",
+      "activo": true
+    },
+    {
+      "id_conductor": 13,
+      "id_empresa": 7,
+      "nombre": "Sergio",
+      "apellido": "Castro",
+      "fecha_vencimiento_licencia": "2024-12-28T00:00:00.000Z",
+      "numero_licencia": "LIC-0013",
+      "dni": "20160485",
+      "telefono": "261-1000481",
+      "activo": true
+    },
+    {
+      "id_conductor": 14,
+      "id_empresa": 7,
+      "nombre": "Mario",
+      "apellido": "Ortega",
+      "fecha_vencimiento_licencia": "2025-08-22T00:00:00.000Z",
+      "numero_licencia": "LIC-0014",
+      "dni": "20172830",
+      "telefono": "261-1000518",
+      "activo": true
+    },
+    {
+      "id_conductor": 15,
+      "id_empresa": 8,
+      "nombre": "Andrés",
+      "apellido": "Morales",
+      "fecha_vencimiento_licencia": "2025-03-11T00:00:00.000Z",
+      "numero_licencia": "LIC-0015",
+      "dni": "20185175",
+      "telefono": "261-1000555",
+      "activo": true
+    }
+  ],
+  "orden_trabajo": [
+    {
+      "id_orden": 1,
+      "id_vehiculo": 1,
+      "id_conductor": 1,
+      "nro_orden_trabajo": "OT-2024-001",
+      "fecha_generacion": "2024-01-15T08:00:00.000Z",
+      "fecha_egreso": "2024-01-18T16:30:00.000Z",
+      "odometro": 125000,
+      "horometro": 8500,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 2,
+      "id_vehiculo": 2,
+      "id_conductor": 2,
+      "nro_orden_trabajo": "OT-2024-002",
+      "fecha_generacion": "2024-02-10T09:15:00.000Z",
+      "fecha_egreso": "2024-02-12T14:20:00.000Z",
+      "odometro": 98000,
+      "horometro": 7200,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 2
+    },
+    {
+      "id_orden": 3,
+      "id_vehiculo": 3,
+      "id_conductor": 3,
+      "nro_orden_trabajo": "OT-2024-003",
+      "fecha_generacion": "2024-03-05T07:30:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 156000,
+      "horometro": 11200,
+      "estado": "En Proceso",
+      "id_tipo_mantenimiento": 3
+    },
+    {
+      "id_orden": 4,
+      "id_vehiculo": 4,
+      "id_conductor": 4,
+      "nro_orden_trabajo": "OT-2024-004",
+      "fecha_generacion": "2024-04-20T10:00:00.000Z",
+      "fecha_egreso": "2024-04-22T17:45:00.000Z",
+      "odometro": 87000,
+      "horometro": 5800,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 5,
+      "id_vehiculo": 5,
+      "id_conductor": 5,
+      "nro_orden_trabajo": "OT-2024-005",
+      "fecha_generacion": "2024-05-12T08:45:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 134000,
+      "horometro": 9600,
+      "estado": "Pendiente",
+      "id_tipo_mantenimiento": 2
+    },
+    {
+      "id_orden": 6,
+      "id_vehiculo": 6,
+      "id_conductor": 6,
+      "nro_orden_trabajo": "OT-2024-006",
+      "fecha_generacion": "2024-06-18T09:30:00.000Z",
+      "fecha_egreso": "2024-06-20T15:00:00.000Z",
+      "odometro": 112000,
+      "horometro": 7800,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 7,
+      "id_vehiculo": 7,
+      "id_conductor": 7,
+      "nro_orden_trabajo": "OT-2024-007",
+      "fecha_generacion": "2024-07-22T11:00:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 145000,
+      "horometro": 10200,
+      "estado": "En Proceso",
+      "id_tipo_mantenimiento": 2
+    },
+    {
+      "id_orden": 8,
+      "id_vehiculo": 8,
+      "id_conductor": 8,
+      "nro_orden_trabajo": "OT-2024-008",
+      "fecha_generacion": "2024-08-14T07:15:00.000Z",
+      "fecha_egreso": "2024-08-16T13:30:00.000Z",
+      "odometro": 92000,
+      "horometro": 6400,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 3
+    },
+    {
+      "id_orden": 9,
+      "id_vehiculo": 9,
+      "id_conductor": 9,
+      "nro_orden_trabajo": "OT-2024-009",
+      "fecha_generacion": "2024-09-08T10:30:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 128000,
+      "horometro": 8900,
+      "estado": "Pendiente",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 10,
+      "id_vehiculo": 10,
+      "id_conductor": 10,
+      "nro_orden_trabajo": "OT-2024-010",
+      "fecha_generacion": "2024-10-25T08:20:00.000Z",
+      "fecha_egreso": "2024-10-27T16:00:00.000Z",
+      "odometro": 103000,
+      "horometro": 7100,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 2
+    },
+    {
+      "id_orden": 11,
+      "id_vehiculo": 11,
+      "id_conductor": 11,
+      "nro_orden_trabajo": "OT-2024-011",
+      "fecha_generacion": "2024-11-12T09:45:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 167000,
+      "horometro": 11800,
+      "estado": "En Proceso",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 12,
+      "id_vehiculo": 12,
+      "id_conductor": 12,
+      "nro_orden_trabajo": "OT-2024-012",
+      "fecha_generacion": "2024-12-03T07:00:00.000Z",
+      "fecha_egreso": "2024-12-05T14:15:00.000Z",
+      "odometro": 76000,
+      "horometro": 5200,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 3
+    },
+    {
+      "id_orden": 13,
+      "id_vehiculo": 13,
+      "id_conductor": 13,
+      "nro_orden_trabajo": "OT-2024-013",
+      "fecha_generacion": "2024-01-28T10:15:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 139000,
+      "horometro": 9800,
+      "estado": "Pendiente",
+      "id_tipo_mantenimiento": 2
+    },
+    {
+      "id_orden": 14,
+      "id_vehiculo": 14,
+      "id_conductor": 14,
+      "nro_orden_trabajo": "OT-2024-014",
+      "fecha_generacion": "2024-02-18T08:30:00.000Z",
+      "fecha_egreso": "2024-02-20T15:45:00.000Z",
+      "odometro": 118000,
+      "horometro": 8200,
+      "estado": "Completada",
+      "id_tipo_mantenimiento": 1
+    },
+    {
+      "id_orden": 15,
+      "id_vehiculo": 15,
+      "id_conductor": 15,
+      "nro_orden_trabajo": "OT-2024-015",
+      "fecha_generacion": "2024-03-25T09:00:00.000Z",
+      "fecha_egreso": null,
+      "odometro": 151000,
+      "horometro": 10700,
+      "estado": "En Proceso",
+      "id_tipo_mantenimiento": null
+    }
+  ],
+  "tipo_mantenimiento": [
+    {
+      "id_tipo": 1,
+      "descripcion": "Preventivo"
+    },
+    {
+      "id_tipo": 2,
+      "descripcion": "Correctivo"
+    },
+    {
+      "id_tipo": 3,
+      "descripcion": "Predictivo"
+    },
+    {
+      "id_tipo": 4,
+      "descripcion": "Preventivo"
+    },
+    {
+      "id_tipo": 5,
+      "descripcion": "Correctivo"
+    },
+    {
+      "id_tipo": 6,
+      "descripcion": "Predictivo"
+    },
+    {
+      "id_tipo": 7,
+      "descripcion": "Preventivo"
+    },
+    {
+      "id_tipo": 8,
+      "descripcion": "Correctivo"
+    },
+    {
+      "id_tipo": 9,
+      "descripcion": "Predictivo"
+    },
+    {
+      "id_tipo": 10,
+      "descripcion": "Preventivo"
+    },
+    {
+      "id_tipo": 11,
+      "descripcion": "Correctivo"
+    },
+    {
+      "id_tipo": 12,
+      "descripcion": "Predictivo"
+    },
+    {
+      "id_tipo": 13,
+      "descripcion": "Preventivo"
+    },
+    {
+      "id_tipo": 14,
+      "descripcion": "Correctivo"
+    },
+    {
+      "id_tipo": 15,
+      "descripcion": "Predictivo"
+    }
+  ],
+  "insumo_catalogo": [
+    {
+      "id_insumo": 1,
+      "codigo_inventario": "INV-001",
+      "descripcion": "Aceite Motor 15W40 - 5L"
+    },
+    {
+      "id_insumo": 2,
+      "codigo_inventario": "INV-002",
+      "descripcion": "Filtro de Aceite"
+    },
+    {
+      "id_insumo": 3,
+      "codigo_inventario": "INV-003",
+      "descripcion": "Filtro de Aire"
+    },
+    {
+      "id_insumo": 4,
+      "codigo_inventario": "INV-004",
+      "descripcion": "Filtro de Combustible"
+    },
+    {
+      "id_insumo": 5,
+      "codigo_inventario": "INV-005",
+      "descripcion": "Pastillas de Freno Delanteras"
+    },
+    {
+      "id_insumo": 6,
+      "codigo_inventario": "INV-006",
+      "descripcion": "Pastillas de Freno Traseras"
+    },
+    {
+      "id_insumo": 7,
+      "codigo_inventario": "INV-007",
+      "descripcion": "Discos de Freno"
+    },
+    {
+      "id_insumo": 8,
+      "codigo_inventario": "INV-008",
+      "descripcion": "Batería 12V 180Ah"
+    },
+    {
+      "id_insumo": 9,
+      "codigo_inventario": "INV-009",
+      "descripcion": "Neumático 275/70 R22.5"
+    },
+    {
+      "id_insumo": 10,
+      "codigo_inventario": "INV-010",
+      "descripcion": "Cámara de Aire 22.5"
+    },
+    {
+      "id_insumo": 11,
+      "codigo_inventario": "INV-011",
+      "descripcion": "Líquido de Frenos DOT 4"
+    },
+    {
+      "id_insumo": 12,
+      "codigo_inventario": "INV-012",
+      "descripcion": "Refrigerante Anticongelante"
+    },
+    {
+      "id_insumo": 13,
+      "codigo_inventario": "INV-013",
+      "descripcion": "Correa de Distribución"
+    },
+    {
+      "id_insumo": 14,
+      "codigo_inventario": "INV-014",
+      "descripcion": "Bomba de Agua"
+    },
+    {
+      "id_insumo": 15,
+      "codigo_inventario": "INV-015",
+      "descripcion": "Radiador"
+    }
+  ],
+  "mecanico": [
+    {
+      "id_mecanico": 1,
+      "id_empresa": 1,
+      "nombre": "Roberto",
+      "especialidad": "Motor",
+      "apellido": "",
+      "dni": "25002222",
+      "telefono": "261-1000041",
+      "activo": true
+    },
+    {
+      "id_mecanico": 2,
+      "id_empresa": 1,
+      "nombre": "Francisco",
+      "especialidad": "Transmisión",
+      "apellido": "",
+      "dni": "25004444",
+      "telefono": "261-1000082",
+      "activo": true
+    },
+    {
+      "id_mecanico": 3,
+      "id_empresa": 2,
+      "nombre": "Alberto",
+      "especialidad": "Frenos",
+      "apellido": "",
+      "dni": "25006666",
+      "telefono": "261-1000123",
+      "activo": true
+    },
+    {
+      "id_mecanico": 4,
+      "id_empresa": 2,
+      "nombre": "Eduardo",
+      "especialidad": "Electricidad",
+      "apellido": "",
+      "dni": "25008888",
+      "telefono": "261-1000164",
+      "activo": true
+    },
+    {
+      "id_mecanico": 5,
+      "id_empresa": 3,
+      "nombre": "Gustavo",
+      "especialidad": "Suspensión",
+      "apellido": "",
+      "dni": "25011110",
+      "telefono": "261-1000205",
+      "activo": true
+    },
+    {
+      "id_mecanico": 6,
+      "id_empresa": 3,
+      "nombre": "Daniel",
+      "especialidad": "Motor",
+      "apellido": "",
+      "dni": "25013332",
+      "telefono": "261-1000246",
+      "activo": true
+    },
+    {
+      "id_mecanico": 7,
+      "id_empresa": 4,
+      "nombre": "Marcelo",
+      "especialidad": "Transmisión",
+      "apellido": "",
+      "dni": "25015554",
+      "telefono": "261-1000287",
+      "activo": true
+    },
+    {
+      "id_mecanico": 8,
+      "id_empresa": 4,
+      "nombre": "Pablo",
+      "especialidad": "Frenos",
+      "apellido": "",
+      "dni": "25017776",
+      "telefono": "261-1000328",
+      "activo": true
+    },
+    {
+      "id_mecanico": 9,
+      "id_empresa": 5,
+      "nombre": "Raúl",
+      "especialidad": "Electricidad",
+      "apellido": "",
+      "dni": "25019998",
+      "telefono": "261-1000369",
+      "activo": true
+    },
+    {
+      "id_mecanico": 10,
+      "id_empresa": 5,
+      "nombre": "Víctor",
+      "especialidad": "Suspensión",
+      "apellido": "",
+      "dni": "25022220",
+      "telefono": "261-1000410",
+      "activo": true
+    },
+    {
+      "id_mecanico": 11,
+      "id_empresa": 6,
+      "nombre": "Oscar",
+      "especialidad": "Motor",
+      "apellido": "",
+      "dni": "25024442",
+      "telefono": "261-1000451",
+      "activo": true
+    },
+    {
+      "id_mecanico": 12,
+      "id_empresa": 6,
+      "nombre": "Néstor",
+      "especialidad": "Transmisión",
+      "apellido": "",
+      "dni": "25026664",
+      "telefono": "261-1000492",
+      "activo": true
+    },
+    {
+      "id_mecanico": 13,
+      "id_empresa": 7,
+      "nombre": "Hugo",
+      "especialidad": "Frenos",
+      "apellido": "",
+      "dni": "25028886",
+      "telefono": "261-1000533",
+      "activo": true
+    },
+    {
+      "id_mecanico": 14,
+      "id_empresa": 7,
+      "nombre": "Enrique",
+      "especialidad": "Electricidad",
+      "apellido": "",
+      "dni": "25031108",
+      "telefono": "261-1000574",
+      "activo": true
+    },
+    {
+      "id_mecanico": 15,
+      "id_empresa": 8,
+      "nombre": "Javier",
+      "especialidad": "Suspensión",
+      "apellido": "",
+      "dni": "25033330",
+      "telefono": "261-1000615",
+      "activo": true
+    }
+  ],
+  "linea_servicio": [
+    {
+      "id_linea_servicio": 1,
+      "id_orden": 1,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Cambio de aceite y filtros",
+      "descripcion_detallada": "Reemplazo completo de aceite motor, filtro de aceite, filtro de aire y filtro de combustible. Verificación de niveles de fluidos."
+    },
+    {
+      "id_linea_servicio": 2,
+      "id_orden": 1,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Revisión de frenos",
+      "descripcion_detallada": "Inspección completa del sistema de frenos. Verificación de pastillas, discos y líquido de frenos."
+    },
+    {
+      "id_linea_servicio": 3,
+      "id_orden": 2,
+      "id_tipo_mantenimiento": 2,
+      "definicion_trabajo": "Reparación de transmisión",
+      "descripcion_detallada": "Reparación de falla en caja de cambios. Reemplazo de componentes internos dañados."
+    },
+    {
+      "id_linea_servicio": 4,
+      "id_orden": 3,
+      "id_tipo_mantenimiento": 3,
+      "definicion_trabajo": "Análisis predictivo de motor",
+      "descripcion_detallada": "Diagnóstico mediante análisis de vibraciones y temperatura. Evaluación de desgaste de componentes."
+    },
+    {
+      "id_linea_servicio": 5,
+      "id_orden": 4,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Mantenimiento preventivo general",
+      "descripcion_detallada": "Revisión completa del vehículo según plan de mantenimiento. Lubricación de puntos críticos."
+    },
+    {
+      "id_linea_servicio": 6,
+      "id_orden": 5,
+      "id_tipo_mantenimiento": 2,
+      "definicion_trabajo": "Reparación de sistema eléctrico",
+      "descripcion_detallada": "Corrección de fallas en sistema de carga. Reemplazo de alternador y regulador."
+    },
+    {
+      "id_linea_servicio": 7,
+      "id_orden": 6,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Cambio de neumáticos",
+      "descripcion_detallada": "Reemplazo de juego completo de neumáticos. Balanceo y alineación."
+    },
+    {
+      "id_linea_servicio": 8,
+      "id_orden": 7,
+      "id_tipo_mantenimiento": 2,
+      "definicion_trabajo": "Reparación de suspensión",
+      "descripcion_detallada": "Reemplazo de amortiguadores delanteros y traseros. Verificación de brazos y bujes."
+    },
+    {
+      "id_linea_servicio": 9,
+      "id_orden": 8,
+      "id_tipo_mantenimiento": 3,
+      "definicion_trabajo": "Diagnóstico de emisiones",
+      "descripcion_detallada": "Análisis de gases de escape. Verificación de sistema de escape y catalizador."
+    },
+    {
+      "id_linea_servicio": 10,
+      "id_orden": 9,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Revisión de sistema de refrigeración",
+      "descripcion_detallada": "Limpieza de radiador. Verificación de mangueras y bomba de agua. Cambio de refrigerante."
+    },
+    {
+      "id_linea_servicio": 11,
+      "id_orden": 10,
+      "id_tipo_mantenimiento": 2,
+      "definicion_trabajo": "Reparación de dirección",
+      "descripcion_detallada": "Reemplazo de terminales de dirección. Ajuste de alineación y verificación de caja de dirección."
+    },
+    {
+      "id_linea_servicio": 12,
+      "id_orden": 11,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Mantenimiento de batería",
+      "descripcion_detallada": "Verificación de carga y estado de batería. Limpieza de terminales y verificación de sistema de carga."
+    },
+    {
+      "id_linea_servicio": 13,
+      "id_orden": 12,
+      "id_tipo_mantenimiento": 3,
+      "definicion_trabajo": "Análisis de vibraciones",
+      "descripcion_detallada": "Diagnóstico de vibraciones anormales. Verificación de balanceo de ruedas y ejes."
+    },
+    {
+      "id_linea_servicio": 14,
+      "id_orden": 13,
+      "id_tipo_mantenimiento": 2,
+      "definicion_trabajo": "Reparación de sistema de aire acondicionado",
+      "descripcion_detallada": "Recarga de gas refrigerante. Limpieza de filtros y verificación de compresor."
+    },
+    {
+      "id_linea_servicio": 15,
+      "id_orden": 14,
+      "id_tipo_mantenimiento": 1,
+      "definicion_trabajo": "Revisión de luces y señalización",
+      "descripcion_detallada": "Verificación completa de sistema de iluminación. Reemplazo de focos quemados y verificación de intermitentes."
+    }
+  ],
+  "detalle_insumo": [
+    {
+      "id_detalle_insumo": 1,
+      "id_orden": 1,
+      "id_insumo": 1,
+      "cantidad": 2,
+      "costo_unitario_historico": 8500,
+      "costo_total": 17000,
+      "id_detalle": 1
+    },
+    {
+      "id_detalle_insumo": 2,
+      "id_orden": 1,
+      "id_insumo": 2,
+      "cantidad": 1,
+      "costo_unitario_historico": 3200,
+      "costo_total": 3200,
+      "id_detalle": 2
+    },
+    {
+      "id_detalle_insumo": 3,
+      "id_orden": 2,
+      "id_insumo": 5,
+      "cantidad": 4,
+      "costo_unitario_historico": 12500,
+      "costo_total": 50000,
+      "id_detalle": 3
+    },
+    {
+      "id_detalle_insumo": 4,
+      "id_orden": 3,
+      "id_insumo": 8,
+      "cantidad": 1,
+      "costo_unitario_historico": 45000,
+      "costo_total": 45000,
+      "id_detalle": 4
+    },
+    {
+      "id_detalle_insumo": 5,
+      "id_orden": 4,
+      "id_insumo": 9,
+      "cantidad": 6,
+      "costo_unitario_historico": 85000,
+      "costo_total": 510000,
+      "id_detalle": 5
+    },
+    {
+      "id_detalle_insumo": 6,
+      "id_orden": 5,
+      "id_insumo": 11,
+      "cantidad": 2,
+      "costo_unitario_historico": 2800,
+      "costo_total": 5600,
+      "id_detalle": 6
+    },
+    {
+      "id_detalle_insumo": 7,
+      "id_orden": 6,
+      "id_insumo": 3,
+      "cantidad": 1,
+      "costo_unitario_historico": 5800,
+      "costo_total": 5800,
+      "id_detalle": 7
+    },
+    {
+      "id_detalle_insumo": 8,
+      "id_orden": 7,
+      "id_insumo": 7,
+      "cantidad": 2,
+      "costo_unitario_historico": 35000,
+      "costo_total": 70000,
+      "id_detalle": 8
+    },
+    {
+      "id_detalle_insumo": 9,
+      "id_orden": 8,
+      "id_insumo": 12,
+      "cantidad": 3,
+      "costo_unitario_historico": 4200,
+      "costo_total": 12600,
+      "id_detalle": 9
+    },
+    {
+      "id_detalle_insumo": 10,
+      "id_orden": 9,
+      "id_insumo": 13,
+      "cantidad": 1,
+      "costo_unitario_historico": 28000,
+      "costo_total": 28000,
+      "id_detalle": 10
+    },
+    {
+      "id_detalle_insumo": 11,
+      "id_orden": 10,
+      "id_insumo": 4,
+      "cantidad": 1,
+      "costo_unitario_historico": 4800,
+      "costo_total": 4800,
+      "id_detalle": 11
+    },
+    {
+      "id_detalle_insumo": 12,
+      "id_orden": 11,
+      "id_insumo": 14,
+      "cantidad": 1,
+      "costo_unitario_historico": 38000,
+      "costo_total": 38000,
+      "id_detalle": 12
+    },
+    {
+      "id_detalle_insumo": 13,
+      "id_orden": 12,
+      "id_insumo": 6,
+      "cantidad": 4,
+      "costo_unitario_historico": 11800,
+      "costo_total": 47200,
+      "id_detalle": 13
+    },
+    {
+      "id_detalle_insumo": 14,
+      "id_orden": 13,
+      "id_insumo": 15,
+      "cantidad": 1,
+      "costo_unitario_historico": 125000,
+      "costo_total": 125000,
+      "id_detalle": 14
+    },
+    {
+      "id_detalle_insumo": 15,
+      "id_orden": 14,
+      "id_insumo": 10,
+      "cantidad": 6,
+      "costo_unitario_historico": 12000,
+      "costo_total": 72000,
+      "id_detalle": 15
+    }
+  ],
+  "orden_x_mecanico": [
+    {
+      "id_orden": 1,
+      "id_mecanico": 1
+    },
+    {
+      "id_orden": 1,
+      "id_mecanico": 2
+    },
+    {
+      "id_orden": 2,
+      "id_mecanico": 3
+    },
+    {
+      "id_orden": 3,
+      "id_mecanico": 4
+    },
+    {
+      "id_orden": 4,
+      "id_mecanico": 5
+    },
+    {
+      "id_orden": 5,
+      "id_mecanico": 6
+    },
+    {
+      "id_orden": 6,
+      "id_mecanico": 7
+    },
+    {
+      "id_orden": 7,
+      "id_mecanico": 8
+    },
+    {
+      "id_orden": 8,
+      "id_mecanico": 9
+    },
+    {
+      "id_orden": 9,
+      "id_mecanico": 10
+    },
+    {
+      "id_orden": 10,
+      "id_mecanico": 11
+    },
+    {
+      "id_orden": 11,
+      "id_mecanico": 12
+    },
+    {
+      "id_orden": 12,
+      "id_mecanico": 13
+    },
+    {
+      "id_orden": 13,
+      "id_mecanico": 14
+    },
+    {
+      "id_orden": 14,
+      "id_mecanico": 15
+    }
+  ],
+  "rol": [
+    {
+      "id_rol": 1,
+      "nombre": "ADMIN"
+    },
+    {
+      "id_rol": 2,
+      "nombre": "Empresa"
+    },
+    {
+      "id_rol": 3,
+      "nombre": "Inspector"
+    },
+    {
+      "id_rol": 4,
+      "nombre": "Auditor"
+    }
+  ],
+  "usuario": [
+    {
+      "id_usuario": 1,
+      "username": "emop_admin@mendoza.ar",
+      "email": "emop_admin@mendoza.ar",
+      "password_hash": "Admin1234",
+      "activo": true,
+      "id_rol": 1,
+      "id_empresa": null,
+      "nombre_completo": "Mauro Villaruel",
+      "dni": "29589324",
+      "telefono": "261 5899591"
+    },
+    {
+      "id_usuario": 2,
+      "username": "claudio.dominguez@mendoza.ar",
+      "email": "claudio.dominguez@mendoza.ar",
+      "password_hash": "Claudio1234",
+      "activo": true,
+      "id_rol": 2,
+      "id_empresa": null,
+      "nombre_completo": "Claudio Dominguez",
+      "dni": "32245364",
+      "telefono": "261 5458863"
+    },
+    {
+      "id_usuario": 3,
+      "username": "luis.rodriguez@mendoza.ar",
+      "email": "luis.rodriguez@mendoza.ar",
+      "password_hash": "Luis1234",
+      "activo": true,
+      "id_rol": 4,
+      "id_empresa": 2,
+      "nombre_completo": "Luis Rodriguez",
+      "dni": "28345678",
+      "telefono": "261 5123456"
+    },
+    {
+      "id_usuario": 4,
+      "username": "claudia.diaz@mendoza.ar",
+      "email": "claudia.diaz@mendoza.ar",
+      "password_hash": "Claudia1234",
+      "activo": true,
+      "id_rol": 3,
+      "id_empresa": null,
+      "nombre_completo": "Claudia Diaz",
+      "dni": "30123456",
+      "telefono": "261 5234567"
+    },
+    {
+      "id_usuario": 5,
+      "username": "maria.juarez@mendoza.ar",
+      "email": "maria.juarez@mendoza.ar",
+      "password_hash": "Maria1234",
+      "activo": true,
+      "id_rol": 2,
+      "id_empresa": 2,
+      "nombre_completo": "María Juarez",
+      "dni": "31234567",
+      "telefono": "261 5345678"
+    },
+    {
+      "id_usuario": 6,
+      "username": "carlos.noordermer@mendoza.ar",
+      "email": "carlos.noordermer@mendoza.ar",
+      "password_hash": "Carlos1234",
+      "activo": true,
+      "id_rol": 4,
+      "id_empresa": 3,
+      "nombre_completo": "Carlos Alberto Noordermer",
+      "dni": "32345678",
+      "telefono": "261 5456789"
+    },
+    {
+      "id_usuario": 7,
+      "username": "ian.oscar@mendoza.ar",
+      "email": "ian.oscar@mendoza.ar",
+      "password_hash": "Ian1234",
+      "activo": true,
+      "id_rol": 2,
+      "id_empresa": null,
+      "nombre_completo": "Ian Oscar",
+      "dni": "33456789",
+      "telefono": "261 5567890"
+    },
+    {
+      "id_usuario": 8,
+      "username": "juan.diez@mendoza.ar",
+      "email": "juan.diez@mendoza.ar",
+      "password_hash": "Juan1234",
+      "activo": true,
+      "id_rol": 3,
+      "id_empresa": 2,
+      "nombre_completo": "Juan Manuel Diez",
+      "dni": "34567890",
+      "telefono": "261 5678901"
+    },
+    {
+      "id_usuario": 9,
+      "username": "bruno.marquez@mendoza.ar",
+      "email": "bruno.marquez@mendoza.ar",
+      "password_hash": "Bruno1234",
+      "activo": true,
+      "id_rol": 4,
+      "id_empresa": 4,
+      "nombre_completo": "Bruno Marquez",
+      "dni": "35678901",
+      "telefono": "261 5789012"
+    },
+    {
+      "id_usuario": 10,
+      "username": "marcos.cermello@mendoza.ar",
+      "email": "marcos.cermello@mendoza.ar",
+      "password_hash": "Marcos1234",
+      "activo": true,
+      "id_rol": 2,
+      "id_empresa": 3,
+      "nombre_completo": "Marcos Cermello",
+      "dni": "36789012",
+      "telefono": "261 5890123"
+    },
+    {
+      "id": 11,
+      "id_usuario": 11,
+      "username": "leo@messi.com",
+      "email": "leo@messi.com",
+      "password_hash": "Leo1234",
+      "activo": true,
+      "id_rol": 3,
+      "id_empresa": null,
+      "nombre_completo": "Leonel Messi",
+      "dni": "29850522",
+      "telefono": "3408675632"
+    },
+    {
+      "id": 12,
+      "id_usuario": 12,
+      "username": "cesars.avalith@gmail.com",
+      "email": "cesars.avalith@gmail.com",
+      "password_hash": "cesar1234",
+      "activo": true,
+      "id_rol": 2,
+      "id_empresa": 14,
+      "nombre_completo": "Cesar Sanchez",
+      "dni": "29855555",
+      "telefono": "3408675632"
+    },
+    {
+      "id": 13,
+      "id_usuario": 13,
+      "username": "dibu@gmail.com",
+      "password_hash": "dibu1234",
+      "activo": true,
+      "id_rol": 3,
+      "id_empresa": null,
+      "nombre_completo": "Dibu Martinez",
+      "dni": "3025874125",
+      "telefono": "3408521020",
+      "email": "dibu@gmail.com"
+    }
+  ],
+  "rto_registro": [
+    {
+      "id_rto": 1,
+      "id_vehiculo": 1,
+      "fecha_vencimiento": "2025-11-20T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 2,
+      "id_vehiculo": 2,
+      "fecha_vencimiento": "2026-09-10T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 3,
+      "id_vehiculo": 3,
+      "fecha_vencimiento": "2027-05-03T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 4,
+      "id_vehiculo": 4,
+      "fecha_vencimiento": "2028-01-30T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 5,
+      "id_vehiculo": 5,
+      "fecha_vencimiento": "2027-11-12T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 6,
+      "id_vehiculo": 6,
+      "fecha_vencimiento": "2026-04-19T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 7,
+      "id_vehiculo": 7,
+      "fecha_vencimiento": "2025-08-07T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 8,
+      "id_vehiculo": 8,
+      "fecha_vencimiento": "2028-06-22T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 9,
+      "id_vehiculo": 9,
+      "fecha_vencimiento": "2025-03-18T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 10,
+      "id_vehiculo": 10,
+      "fecha_vencimiento": "2026-07-08T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 11,
+      "id_vehiculo": 11,
+      "fecha_vencimiento": "2028-03-14T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 12,
+      "id_vehiculo": 12,
+      "fecha_vencimiento": "2025-09-25T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 13,
+      "id_vehiculo": 13,
+      "fecha_vencimiento": "2028-08-17T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 14,
+      "id_vehiculo": 14,
+      "fecha_vencimiento": "2025-12-28T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 15,
+      "id_vehiculo": 15,
+      "fecha_vencimiento": "2026-02-11T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    },
+    {
+      "id_rto": 16,
+      "id_vehiculo": 16,
+      "fecha_vencimiento": "2028-12-10T00:00:00.000Z",
+      "aprobado": true,
+      "activo": true
+    }
+  ],
+  "prueba": [
+    {
+      "id": 1,
+      "nombre": "Prueba 01"
+    }
+  ],
+  "auditoria": [
+    {
+      "id_auditoria": 1,
+      "fecha_hora": "2024-01-15T08:30:00.000Z",
+      "usuario_nombre": "Mauro Villaruel",
+      "id_registro": 1,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de nueva orden de trabajo OT-2024-001 para vehículo interno 101",
+      "id_usuario_ref": 1,
+      "id_mantenimiento_ref": 1
+    },
+    {
+      "id_auditoria": 2,
+      "fecha_hora": "2024-01-18T16:45:00.000Z",
+      "usuario_nombre": "Claudio Dominguez",
+      "id_registro": 1,
+      "tipo_registro": "orden_trabajo",
+      "accion": "ACTUALIZAR",
+      "detalle": "Actualización de estado de orden de trabajo OT-2024-001 a Completada",
+      "id_usuario_ref": 2,
+      "id_mantenimiento_ref": 1
+    },
+    {
+      "id_auditoria": 3,
+      "fecha_hora": "2024-02-10T09:20:00.000Z",
+      "usuario_nombre": "Luis Rodriguez",
+      "id_registro": 2,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-002 para mantenimiento correctivo",
+      "id_usuario_ref": 3,
+      "id_mantenimiento_ref": 2
+    },
+    {
+      "id_auditoria": 4,
+      "fecha_hora": "2024-02-12T14:30:00.000Z",
+      "usuario_nombre": "Claudia Diaz",
+      "id_registro": 2,
+      "tipo_registro": "orden_trabajo",
+      "accion": "VER",
+      "detalle": "Consulta de detalles de orden de trabajo OT-2024-002",
+      "id_usuario_ref": 4,
+      "id_mantenimiento_ref": 2
+    },
+    {
+      "id_auditoria": 5,
+      "fecha_hora": "2024-03-05T07:45:00.000Z",
+      "usuario_nombre": "María Juarez",
+      "id_registro": 3,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-003 para mantenimiento predictivo",
+      "id_usuario_ref": 5,
+      "id_mantenimiento_ref": 3
+    },
+    {
+      "id_auditoria": 6,
+      "fecha_hora": "2024-04-20T10:15:00.000Z",
+      "usuario_nombre": "Carlos Alberto Noordermer",
+      "id_registro": 4,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-004 para cambio de aceite y filtros",
+      "id_usuario_ref": 6,
+      "id_mantenimiento_ref": 4
+    },
+    {
+      "id_auditoria": 7,
+      "fecha_hora": "2024-04-22T17:50:00.000Z",
+      "usuario_nombre": "Ian Oscar",
+      "id_registro": 4,
+      "tipo_registro": "orden_trabajo",
+      "accion": "ACTUALIZAR",
+      "detalle": "Actualización de fecha de finalización de orden OT-2024-004",
+      "id_usuario_ref": 7,
+      "id_mantenimiento_ref": 4
+    },
+    {
+      "id_auditoria": 8,
+      "fecha_hora": "2024-05-12T09:00:00.000Z",
+      "usuario_nombre": "Juan Manuel Diez",
+      "id_registro": 5,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-005 para reparación de sistema eléctrico",
+      "id_usuario_ref": 8,
+      "id_mantenimiento_ref": 5
+    },
+    {
+      "id_auditoria": 9,
+      "fecha_hora": "2024-06-18T09:45:00.000Z",
+      "usuario_nombre": "Bruno Marquez",
+      "id_registro": 6,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-006 para cambio de neumáticos",
+      "id_usuario_ref": 9,
+      "id_mantenimiento_ref": 6
+    },
+    {
+      "id_auditoria": 10,
+      "fecha_hora": "2024-06-20T15:15:00.000Z",
+      "usuario_nombre": "Marcos Cermello",
+      "id_registro": 6,
+      "tipo_registro": "orden_trabajo",
+      "accion": "ACTUALIZAR",
+      "detalle": "Actualización de odómetro y horómetro en orden OT-2024-006",
+      "id_usuario_ref": 10,
+      "id_mantenimiento_ref": 6
+    },
+    {
+      "id_auditoria": 11,
+      "fecha_hora": "2024-07-22T11:20:00.000Z",
+      "usuario_nombre": "Leonel Messi",
+      "id_registro": 7,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-007 para reparación de suspensión",
+      "id_usuario_ref": 11,
+      "id_mantenimiento_ref": 7
+    },
+    {
+      "id_auditoria": 12,
+      "fecha_hora": "2024-08-14T07:30:00.000Z",
+      "usuario_nombre": "Cesar Sanchez",
+      "id_registro": 8,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-008 para diagnóstico de emisiones",
+      "id_usuario_ref": 12,
+      "id_mantenimiento_ref": 8
+    },
+    {
+      "id_auditoria": 13,
+      "fecha_hora": "2024-08-16T13:45:00.000Z",
+      "usuario_nombre": "Mauro Villaruel",
+      "id_registro": 8,
+      "tipo_registro": "orden_trabajo",
+      "accion": "ACTUALIZAR",
+      "detalle": "Actualización de observaciones en orden OT-2024-008",
+      "id_usuario_ref": 1,
+      "id_mantenimiento_ref": 8
+    },
+    {
+      "id_auditoria": 14,
+      "fecha_hora": "2024-09-08T10:45:00.000Z",
+      "usuario_nombre": "Claudio Dominguez",
+      "id_registro": 9,
+      "tipo_registro": "orden_trabajo",
+      "accion": "CREAR",
+      "detalle": "Creación de orden de trabajo OT-2024-009 para revisión de sistema de refrigeración",
+      "id_usuario_ref": 2,
+      "id_mantenimiento_ref": 9
+    },
+    {
+      "id_auditoria": 15,
+      "fecha_hora": "2024-10-25T08:35:00.000Z",
+      "usuario_nombre": "Luis Rodriguez",
+      "id_registro": 13,
+      "tipo_registro": "usuario",
+      "accion": "CREAR",
+      "detalle": "Alta de nuevo usuario en el sistema",
+      "id_usuario_ref": 3,
+      "id_mantenimiento_ref": null
+    }
+  ],
+  "orden_x_usuario": [
+    {
+      "id_orden_trabajo": 1,
+      "id_usuario": 6,
+      "id": 1
+    },
+    {
+      "id_orden_trabajo": 1,
+      "id_usuario": 8,
+      "id": 2
+    },
+    {
+      "id_orden_trabajo": 4,
+      "id_usuario": 6,
+      "id": 3
+    }
+  ]
+}

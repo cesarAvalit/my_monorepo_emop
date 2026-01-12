@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    background-color: #f9fafb !important;
+  }
+  
+  body {
+    @apply text-gray-900;
+    background-color: #f9fafb !important;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root {
+    background-color: #f9fafb !important;
+    min-height: 100vh;
+  }
+
+  /* Estilos por defecto para títulos */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-[#007C8A];
+  }
+}
+
+@layer components {
+  /* Botones con color primario por defecto */
+  .btn-primary,
+  button[type="submit"] {
+    @apply bg-[#007C8A] text-white transition-colors duration-200;
+  }
+
+  .btn-primary:hover,
+  button[type="submit"]:hover {
+    @apply bg-[#15A7A7];
+  }
+}
+
+/* Modal background - asegurar fondo blanco con máxima especificidad */
+.modal-content,
+div.modal-content,
+.bg-white.modal-content,
+div.bg-white.modal-content,
+div[class*="modal-content"],
+div[data-modal="true"],
+div[data-modal="true"].bg-white,
+div[data-modal="true"].modal-content {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  background-image: none !important;
+}
+
+/* Forzar fondo blanco en todos los modales con máxima especificidad */
+div[class*="bg-white"][class*="rounded-lg"][class*="shadow-xl"],
+div.bg-white.rounded-lg.shadow-xl,
+div.bg-white.modal-content.rounded-lg.shadow-xl,
+div[data-modal="true"].bg-white.rounded-lg.shadow-xl,
+#modal-detalle-auditoria,
+div.bg-white.modal-content.rounded-lg.shadow-xl[data-modal="true"] {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  background-image: none !important;
+}
+
+/* Asegurar que los divs dentro del overlay tengan fondo blanco */
+div[style*="rgba(0, 124, 138, 0.5)"] > div.bg-white,
+div[style*="rgba(0, 124, 138, 0.5)"] > div.modal-content {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  background-image: none !important;
+}
