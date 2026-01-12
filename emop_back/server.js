@@ -1,8 +1,5 @@
 /**
- * Servidor Express para el Backend de EMOP
- * 
- * Este servidor replica todas las operaciones que el frontend hace
- * directamente con Supabase, proporcionando una API REST.
+ * Servidor Express para el Backend de EMOP - MODIFICADO PARA PRODUCCIÓN
  */
 
 import express from 'express';
@@ -12,14 +9,8 @@ import tableRoutes from './routes/tableRoutes.js';
 import auditoriaRoutes from './routes/auditoriaRoutes.js';
 import { getDatabaseType, closeDatabase } from './config/database.js';
 
-// Cargar variables de entorno
-// IMPORTANTE: .env_local sobrescribe .env si existe (override: true)
-// Para usar remoto (Supabase): elimina .env_local o no lo crees
-// Para usar local: crea/usa .env_local con DB_TYPE=postgres
-dotenv.config(); // Carga .env
+dotenv.config(); 
 
-// Cargar también .env_local si existe (para desarrollo local)
-// override: true significa que .env_local SOBRESCRIBE .env
 try {
   dotenv.config({ path: '.env_local', override: true });
 } catch (err) {
@@ -27,14 +18,15 @@ try {
 }
 
 const app = express();
+// Render asigna el puerto automáticamente, por eso usamos process.env.PORT
 const PORT = process.env.PORT || 3001;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-// Middleware
+// MODIFICACIÓN DE CORS: Permitimos cualquier origen en producción para evitar bloqueos
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: '*', 
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -73,18 +65,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Iniciar servidor
-const server = app.listen(PORT, () => {
+// MODIFICACIÓN DE LISTEN: Escuchar en '0.0.0.0' es vital para Render
+const server = app.listen(PORT, '0.0.0.0', () => {
   const dbType = getDatabaseType();
-  console.log(`🚀 Servidor EMOP Backend corriendo en http://localhost:${PORT}`);
-  console.log(`📡 Frontend esperado en: ${FRONTEND_URL}`);
+  console.log(`🚀 Servidor EMOP Backend iniciado en puerto: ${PORT}`);
   console.log(`🗄️  Base de datos: ${dbType === 'postgres' ? 'PostgreSQL Local' : 'Supabase'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
 
 // Manejar cierre graceful
 process.on('SIGTERM', async () => {
-  console.log('⚠️ SIGTERM recibido, cerrando servidor...');
   server.close(async () => {
     await closeDatabase();
     process.exit(0);
@@ -92,10 +81,8 @@ process.on('SIGTERM', async () => {
 });
 
 process.on('SIGINT', async () => {
-  console.log('⚠️ SIGINT recibido, cerrando servidor...');
   server.close(async () => {
     await closeDatabase();
     process.exit(0);
   });
 });
-
