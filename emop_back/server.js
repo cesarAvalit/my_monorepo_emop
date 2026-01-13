@@ -69,7 +69,7 @@ app.use((err, req, res, next) => {
 const server = app.listen(PORT, '0.0.0.0', () => {
   const dbType = getDatabaseType();
   console.log(`🚀 Servidor EMOP Backend iniciado en puerto: ${PORT}`);
-  console.log(`🗄️  Base de datos: ${dbType === 'postgres' ? 'PostgreSQL Local' : 'Supabase'}`);
+  console.log(`🗄️  Base de datos: ${dbType === 'postgres' ? 'PostgreSQL Local' : 'Neon'}`);
 });
 
 // Manejar cierre graceful

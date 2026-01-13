@@ -16,6 +16,14 @@ import {
 const router = express.Router();
 
 /**
+ * GET /api/testing
+ * Endpoint de prueba que devuelve un objeto testing
+ */
+router.get('/testing', (req, res) => {
+  res.json({ nameProjet:'EMOP', testing: true });
+});
+
+/**
  * GET /api/:table
  * Obtener todos los registros de una tabla
  * Query params: filter, orderBy, ascending, limit
@@ -65,8 +73,8 @@ router.get('/:table', async (req, res) => {
       options.limit = parseInt(limit);
     }
     
-    const data = await getAllFromTable(table, options);
-    res.json(data);
+    const data = await getAllFromTable(table, options);    
+    res.json(data)
   } catch (error) {
     console.error(`Error en GET /api/${req.params.table}:`, error);
     res.status(500).json({ error: error.message || 'Error al obtener datos' });
