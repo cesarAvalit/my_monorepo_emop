@@ -20,7 +20,7 @@ const router = express.Router();
  * Endpoint de prueba que devuelve un objeto testing
  */
 router.get('/testing', (req, res) => {
-  res.json({ nameProjet:'EMOP-Mendoza2026', testing: true });
+  res.json({ nameProjet:'EMOP-Mendoza2026 - Argentina', testing: true });
 });
 
 /**
