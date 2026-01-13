@@ -2269,7 +2269,7 @@ const Registros = () => {
     return 'En mantenimiento';
   };
 
-  // Filtrar datos según búsqueda
+  // Filtrar datos según búsqueda - Busca en TODAS las columnas
   const filteredData = Array.isArray(vehiculos) ? vehiculos.filter(item => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
@@ -2304,7 +2304,21 @@ const Registros = () => {
     const horometroStr = item.horometro ? formatNumber(item.horometro).toLowerCase() : '';
     const anioStr = item.anio ? item.anio.toString().toLowerCase() : '';
     
+    // Crear un string con todos los valores del objeto para búsqueda completa
+    const allValuesString = Object.values(item)
+      .filter(val => val !== null && val !== undefined)
+      .map(val => {
+        if (typeof val === 'object' && !Array.isArray(val)) {
+          return JSON.stringify(val);
+        }
+        return String(val);
+      })
+      .join(' ')
+      .toLowerCase();
+    
+    // Buscar en todas las columnas visibles y campos adicionales
     return (
+      // Columnas principales de la tabla
       item.matricula?.toLowerCase().includes(searchLower) ||
       item.interno?.toLowerCase().includes(searchLower) ||
       item.marca?.toLowerCase().includes(searchLower) ||
@@ -2315,7 +2329,18 @@ const Registros = () => {
       nombreEmpresa.includes(searchLower) ||
       nombreConductor.includes(searchLower) ||
       item.tipo_servicio?.toLowerCase().includes(searchLower) ||
-      estadoVehiculo.toLowerCase().includes(searchLower)
+      estadoVehiculo.toLowerCase().includes(searchLower) ||
+      // Campos adicionales que pueden existir
+      item.nombre_seguro?.toLowerCase().includes(searchLower) ||
+      item.tipo_seguro_cobertura?.toLowerCase().includes(searchLower) ||
+      item.id_vehiculo?.toString().includes(searchLower) ||
+      item.id_empresa?.toString().includes(searchLower) ||
+      item.id_conductor_activo?.toString().includes(searchLower) ||
+      item.posee_ac?.toString().toLowerCase().includes(searchLower) ||
+      item.posee_camara?.toString().toLowerCase().includes(searchLower) ||
+      item.activo?.toString().toLowerCase().includes(searchLower) ||
+      // Búsqueda en todos los valores del objeto (búsqueda completa)
+      allValuesString.includes(searchLower)
     );
   }) : [];
 

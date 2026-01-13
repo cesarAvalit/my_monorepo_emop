@@ -1384,7 +1384,7 @@ const Home = () => {
           <p className="text-white text-xs sm:text-sm font-normal" style={{ fontFamily: 'Lato, sans-serif', lineHeight: '1.2' }}>
             {isEmpresaUser 
               ? 'Aquí tienes un resumen rápido de la actividad de tu empresa.'
-              : 'Aquí tienes un resumen rápido de la actividad de tu sistema.'
+              : 'Aquí tienes un resumen rápido de la actividad de tu sistema Emop.'
             }
           </p>
         </div>
