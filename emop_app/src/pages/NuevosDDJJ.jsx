@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllFromTable, insertIntoTable, registrarAuditoria } from '../config/supabase';
@@ -15,6 +15,7 @@ const NuevosDDJJ = () => {
 
   // Estados para datos
   const [empresa, setEmpresa] = useState(null);
+  const [empresas, setEmpresas] = useState([]);
   const [vehiculos, setVehiculos] = useState([]);
   const [conductores, setConductores] = useState([]);
   const [mecanicos, setMecanicos] = useState([]);
@@ -32,36 +33,60 @@ const NuevosDDJJ = () => {
     id_vehiculo: '',
     matricula: '',
     tipo_servicio: '',
-    marca: '',
-    modelo: '',
-    interno: '',
-    numero_licencia: '',
     odometro: '',
+    grupo: '',
+    vehiculo: '',
+    licencia: '',
     horometro: '',
-    // Sección 2: Estado y vencimientos de unidad
+    // Sección 2: Estado y movimientos de unidad
     fecha_rto: '',
     fecha_vencimiento_seguro: '',
     tipo_seguro: 'Todo riesgo',
     posee_camaras: false,
-    posee_aire_acondicionado: false,
+    aire_acondicionado: false,
     posee_calefaccion: false,
     posee_seguro: false,
     descripcion_siniestros: '',
     // Sección 3: Información de trabajo
     numero_orden_trabajo: '',
     fecha_orden_trabajo: '',
-    fecha: '',
-    taller: '',
+    fecha_egreso: '',
+    // Subsección: Ejecución y tareas
+    taller_autorizado: '',
     definicion_trabajo: '',
-    mecanico_autorizado: '', // Cambiado de id_mecanico a texto simple
+    mecanico_autorizado: '',
     tipo_mantenimiento: '',
     tarea_descripcion: '',
-    codigo_articulo: '', // Cambiado de id_insumo a texto simple
-    cantidad: '',
-    costo_unitario: '', // Ahora editable
-    costo_total: '', // Ahora editable
-    descripcion_insumo: ''
+    // Subsección: Detalle de insumos/artículos (ahora es un array)
   });
+
+  // Estado para manejar múltiples insumos del formulario
+  const [insumosForm, setInsumosForm] = useState([
+    {
+      id: 1,
+      codigo_articulo: '',
+      cantidad: '1',
+      costo_unitario: '',
+      costo_total: '',
+      descripcion_insumo: ''
+    }
+  ]);
+
+  // Estado para manejar múltiples órdenes de trabajo
+  const [ordenesTrabajoForm, setOrdenesTrabajoForm] = useState([
+    {
+      id: 1,
+      numero_orden_trabajo: '',
+      fecha_orden_trabajo: '',
+      fecha_egreso: '',
+      taller_autorizado: '',
+      definicion_trabajo: '',
+      mecanico_autorizado: '',
+      tipo_mantenimiento: '',
+      tarea_descripcion: ''
+    }
+  ]);
+  const [nextOrdenId, setNextOrdenId] = useState(2);
 
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,7 +97,13 @@ const NuevosDDJJ = () => {
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const fileInputRef = useRef(null);
   const vehiculoDropdownRef = useRef(null);
-  const [costoUnitarioFocused, setCostoUnitarioFocused] = useState(false);
+  const subtotalRef = useRef(null);
+  const totalRef = useRef(null);
+  const codigoArtRef = useRef(null);
+  const costoUnitarioRef = useRef(null);
+  const cantidadRef = useRef(null);
+  const [costoUnitarioFocused, setCostoUnitarioFocused] = useState({});
+  const [nextInsumoId, setNextInsumoId] = useState(2);
 
   // Detectar tamaño de pantalla
   useEffect(() => {
@@ -83,6 +114,33 @@ const NuevosDDJJ = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Sincronizar los anchos de los campos para alinear TOTAL debajo de SUBTOTAL
+  useEffect(() => {
+    const syncWidths = () => {
+      // Sincronizar TOTAL con SUBTOTAL
+      if (subtotalRef.current && totalRef.current) {
+        totalRef.current.style.width = `${subtotalRef.current.offsetWidth}px`;
+      }
+      
+      // Sincronizar espaciadores con los campos correspondientes
+      const espaciadores = document.querySelectorAll('[data-espaciador]');
+      if (codigoArtRef.current && espaciadores[0]) {
+        espaciadores[0].style.width = `${codigoArtRef.current.offsetWidth}px`;
+      }
+      if (costoUnitarioRef.current && espaciadores[1]) {
+        espaciadores[1].style.width = `${costoUnitarioRef.current.offsetWidth}px`;
+      }
+      if (cantidadRef.current && espaciadores[2]) {
+        espaciadores[2].style.width = `${cantidadRef.current.offsetWidth}px`;
+      }
+    };
+    
+    // Usar setTimeout para asegurar que los elementos estén renderizados
+    setTimeout(syncWidths, 0);
+    window.addEventListener('resize', syncWidths);
+    return () => window.removeEventListener('resize', syncWidths);
+  }, [insumosForm]);
 
   // Función para generar el siguiente número de orden de trabajo
   const generarSiguienteNumeroOrden = (ordenesExistentes) => {
@@ -166,6 +224,7 @@ const NuevosDDJJ = () => {
         const validUsuarios = Array.isArray(usuariosData) ? usuariosData : [];
         const validRoles = Array.isArray(rolesData) ? rolesData : [];
         const validTipos = Array.isArray(tiposData) ? tiposData : [];
+        console.log('Tipos de mantenimiento cargados:', validTipos); // Debug: ver qué datos se están cargando
         const validConductores = Array.isArray(conductoresData) ? conductoresData : [];
         const validMecanicos = Array.isArray(mecanicosData) ? mecanicosData : [];
         const validInsumos = Array.isArray(insumosData) ? insumosData : [];
@@ -195,6 +254,7 @@ const NuevosDDJJ = () => {
         }
 
         setVehiculos(vehiculosFiltrados);
+        setEmpresas(validEmpresas); // Guardar todas las empresas para poder buscar por id_empresa
         setConductores(validConductores);
         setMecanicos(mecanicosFiltrados);
         setInsumos(validInsumos);
@@ -203,14 +263,31 @@ const NuevosDDJJ = () => {
         setRoles(validRoles);
         setTiposMantenimiento(validTipos);
 
-        // Generar número de orden de trabajo automático
+        // Generar número de orden de trabajo automático para la primera orden
         const siguienteNumero = generarSiguienteNumeroOrden(validOrdenes);
-        setFormData(prev => ({
-          ...prev,
-          numero_orden_trabajo: siguienteNumero
-        }));
+        setOrdenesTrabajoForm(prev => {
+          if (prev.length > 0 && !prev[0].numero_orden_trabajo) {
+            return prev.map((orden, index) => 
+              index === 0 ? { ...orden, numero_orden_trabajo: siguienteNumero } : orden
+            );
+          }
+          return prev;
+        });
+
+        // Log para debugging
+        console.log('Vehículos cargados:', vehiculosFiltrados.length);
+        console.log('Vehículos de la empresa:', vehiculosFiltrados);
+        if (vehiculosFiltrados.length === 0) {
+          console.warn('⚠️ No se encontraron vehículos para la empresa:', idEmpresaUsuario);
+        }
       } catch (error) {
         console.error('Error al cargar datos:', error);
+        setToast({
+          type: 'error',
+          title: 'Error al cargar datos',
+          message: 'No se pudieron cargar los vehículos. Por favor, verifique la conexión con el backend.'
+        });
+        setTimeout(() => setToast(null), 5000);
       } finally {
         setIsLoading(false);
       }
@@ -251,6 +328,14 @@ const NuevosDDJJ = () => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+  };
+
+  // Función para formatear números con separadores de miles
+  const formatNumber = (value) => {
+    if (!value && value !== 0) return '';
+    const num = parseFloat(value);
+    if (isNaN(num)) return '';
+    return new Intl.NumberFormat('es-AR').format(num);
   };
 
   // Función para formatear moneda (formato argentino: $ X.XXX,XX)
@@ -310,14 +395,118 @@ const NuevosDDJJ = () => {
     }
   };
 
-  // Función eliminada - ya no se usa selección de insumo desde tabla
-  // Los campos codigo_articulo, costo_unitario, costo_total ahora son inputs de texto simples
+  // Funciones para manejar insumos del formulario
+  const agregarInsumo = () => {
+    setInsumosForm(prev => [
+      ...prev,
+      {
+        id: nextInsumoId,
+        codigo_articulo: '',
+        cantidad: '1',
+        costo_unitario: '',
+        costo_total: '',
+        descripcion_insumo: ''
+      }
+    ]);
+    setNextInsumoId(prev => prev + 1);
+  };
+
+  const eliminarInsumo = (id) => {
+    if (insumosForm.length > 1) {
+      setInsumosForm(prev => prev.filter(insumo => insumo.id !== id));
+    }
+  };
+
+  // Función helper para limpiar y parsear valores numéricos
+  const cleanAndParseNumber = (value) => {
+    if (!value && value !== 0) return 0;
+    // Convertir a string y limpiar
+    const str = String(value);
+    // Remover espacios, símbolos de moneda, puntos (separadores de miles) y mantener solo números, comas y puntos decimales
+    const cleaned = str
+      .replace(/[$\s]/g, '') // Remover $ y espacios
+      .replace(/\./g, '') // Remover puntos (separadores de miles)
+      .replace(',', '.'); // Reemplazar coma por punto para parseFloat
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const actualizarInsumo = (id, field, value) => {
+    setInsumosForm(prev => prev.map(insumo => {
+      if (insumo.id === id) {
+        const updated = { ...insumo, [field]: value };
+        
+        // Calcular costo total automáticamente
+        if (field === 'cantidad' || field === 'costo_unitario') {
+          const cantidad = parseFloat(updated.cantidad) || 0;
+          // Limpiar y parsear el costo unitario correctamente
+          const costoUnit = field === 'costo_unitario' 
+            ? cleanAndParseNumber(value)
+            : cleanAndParseNumber(updated.costo_unitario);
+          
+          if (cantidad > 0 && costoUnit > 0) {
+            updated.costo_total = String(cantidad * costoUnit);
+          } else {
+            updated.costo_total = '';
+          }
+        }
+        
+        return updated;
+      }
+      return insumo;
+    }));
+  };
+
+  // Calcular total general de todos los insumos
+  const calcularTotalGeneral = () => {
+    return insumosForm.reduce((total, insumo) => {
+      const costoTotal = parseFloat(insumo.costo_total) || 0;
+      return total + costoTotal;
+    }, 0);
+  };
+
+  // Funciones para manejar órdenes de trabajo
+  const agregarOrdenTrabajo = () => {
+    const nuevoNumero = generarSiguienteNumeroOrden(ordenesTrabajo);
+    setOrdenesTrabajoForm(prev => [
+      ...prev,
+      {
+        id: nextOrdenId,
+        numero_orden_trabajo: nuevoNumero,
+        fecha_orden_trabajo: '',
+        fecha_egreso: '',
+        taller_autorizado: '',
+        definicion_trabajo: '',
+        mecanico_autorizado: '',
+        tipo_mantenimiento: '',
+        tarea_descripcion: ''
+      }
+    ]);
+    setNextOrdenId(prev => prev + 1);
+  };
+
+  const eliminarOrdenTrabajo = (id) => {
+    if (ordenesTrabajoForm.length > 1) {
+      setOrdenesTrabajoForm(prev => prev.filter(orden => orden.id !== id));
+    }
+  };
+
+  const actualizarOrdenTrabajo = (id, field, value) => {
+    setOrdenesTrabajoForm(prev => prev.map(orden => {
+      if (orden.id === id) {
+        return { ...orden, [field]: value };
+      }
+      return orden;
+    }));
+  };
 
   // Manejar selección de vehículo
   const handleVehiculoChange = (idVehiculo) => {
     const vehiculoId = parseInt(idVehiculo, 10);
     const vehiculo = vehiculos.find(v => v.id_vehiculo === vehiculoId);
     if (vehiculo) {
+      console.log('Vehículo seleccionado:', vehiculo);
+      
       // Obtener el conductor activo del vehículo
       let numeroLicencia = '';
       if (vehiculo.id_conductor_activo && conductores.length > 0) {
@@ -326,82 +515,112 @@ const NuevosDDJJ = () => {
           const cId = parseInt(c.id_conductor, 10);
           return cId === conductorId;
         });
-        numeroLicencia = conductor?.numero_licencia || '';
+        if (conductor) {
+          numeroLicencia = conductor.numero_licencia || '';
+          console.log('Conductor encontrado:', conductor, 'Licencia:', numeroLicencia);
+        } else {
+          console.log('Conductor no encontrado para ID:', conductorId);
+        }
+      } else {
+        console.log('Vehículo sin conductor activo o sin conductores disponibles');
       }
 
+      // Obtener empresa del vehículo para grupo
+      let grupoValue = '';
+      if (vehiculo.id_empresa && empresas && empresas.length > 0) {
+        const empresaVehiculo = empresas.find(e => e.id_empresa === vehiculo.id_empresa);
+        // El grupo podría venir de un campo específico o del id_grupo de la empresa
+        grupoValue = empresaVehiculo?.id_grupo ? String(empresaVehiculo.id_grupo) : '';
+        console.log('Empresa del vehículo:', empresaVehiculo, 'Grupo:', grupoValue);
+      }
+
+      // Actualizar todos los campos del formulario con los datos del vehículo
       setFormData(prev => ({
         ...prev,
         id_vehiculo: vehiculo.id_vehiculo,
         matricula: vehiculo.matricula || '',
-        marca: vehiculo.marca || '',
-        modelo: vehiculo.modelo || '',
-        interno: vehiculo.interno || '',
+        vehiculo: vehiculo.interno || '',
         tipo_servicio: vehiculo.tipo_servicio || '',
-        numero_licencia: numeroLicencia,
         odometro: vehiculo.kilometros ? String(vehiculo.kilometros) : '',
         horometro: vehiculo.horometro ? String(vehiculo.horometro) : '',
+        grupo: grupoValue,
+        licencia: numeroLicencia || '', // Licencia del conductor activo
         fecha_rto: formatDateForInput(vehiculo.fecha_ultima_rto),
         fecha_vencimiento_seguro: formatDateForInput(vehiculo.fecha_vencimiento_seguro),
         tipo_seguro: vehiculo.tipo_seguro_cobertura || 'Todo riesgo',
         posee_camaras: vehiculo.posee_camara || false,
-        posee_aire_acondicionado: vehiculo.posee_ac || false,
-        posee_calefaccion: false, // Campo no existe en BD, se puede agregar después
+        aire_acondicionado: vehiculo.posee_ac || false,
+        posee_calefaccion: false,
         posee_seguro: vehiculo.fecha_vencimiento_seguro ? true : false
       }));
       setVehiculoSearchTerm(''); // Limpiar búsqueda después de seleccionar
+      
+      console.log('Formulario actualizado con datos del vehículo');
+    } else {
+      console.error('Vehículo no encontrado con ID:', idVehiculo);
     }
   };
 
   // Filtrar vehículos por término de búsqueda (matrícula o interno)
-  const vehiculosFiltrados = vehiculos.filter(v => {
-    if (!vehiculoSearchTerm) return true;
-    const searchLower = vehiculoSearchTerm.toLowerCase();
-    const matricula = (v.matricula || '').toLowerCase();
-    const interno = (v.interno || '').toLowerCase();
-    return matricula.includes(searchLower) || interno.includes(searchLower);
-  });
+  // Nota: vehiculos ya está filtrado por empresa del usuario en el useEffect
+  const vehiculosFiltrados = useMemo(() => {
+    if (!vehiculoSearchTerm || vehiculoSearchTerm.trim() === '') {
+      return []; // No mostrar nada si no hay búsqueda
+    }
+    
+    if (!Array.isArray(vehiculos) || vehiculos.length === 0) {
+      console.warn('⚠️ No hay vehículos disponibles para filtrar');
+      return [];
+    }
+    
+    const searchLower = vehiculoSearchTerm.toLowerCase().trim();
+    
+    const filtrados = vehiculos.filter(v => {
+      const matricula = (v.matricula || '').toLowerCase();
+      const interno = (v.interno || '').toLowerCase();
+      const marca = (v.marca || '').toLowerCase();
+      const modelo = (v.modelo || '').toLowerCase();
+      
+      // Buscar en matrícula, interno, marca y modelo
+      const matches = matricula.includes(searchLower) || 
+                     interno.includes(searchLower) || 
+                     marca.includes(searchLower) || 
+                     modelo.includes(searchLower);
+      
+      return matches;
+    });
+    
+    console.log(`Búsqueda: "${vehiculoSearchTerm}" - Encontrados: ${filtrados.length} de ${vehiculos.length} vehículos`);
+    
+    return filtrados;
+  }, [vehiculoSearchTerm, vehiculos]);
 
-  // Validar formulario
+  // Función para validar formulario completo
   const validateForm = () => {
     const errors = {};
-    const requiredFields = [
-      'id_vehiculo', 'tipo_servicio', 'marca', 'modelo', 'interno',
-      'numero_orden_trabajo', 'fecha', 'fecha_orden_trabajo', 'odometro', 'horometro',
-      'taller', 'definicion_trabajo', 'mecanico_autorizado', 'tarea_descripcion', 'tipo_mantenimiento',
-      'codigo_articulo', 'cantidad', 'costo_unitario', 'costo_total', 'descripcion_insumo',
-      'fecha_rto', 'fecha_vencimiento_seguro', 'tipo_seguro'
-    ];
-
-    // Mapeo de nombres de campos para mensajes de error
     const fieldNames = {
-      'id_vehiculo': 'Vehículo',
+      'empresa': 'Empresa',
+      'grupo': 'Grupo',
+      'matricula': 'Matrícula',
+      'vehiculo': 'Vehículo',
       'tipo_servicio': 'Tipo de servicio',
-      'marca': 'Marca',
-      'modelo': 'Modelo',
-      'interno': 'Interno',
-      'numero_orden_trabajo': 'N° orden de trabajo',
-      'fecha': 'Fecha Estimacion final',
-      'fecha_orden_trabajo': 'Fecha de orden de trabajo',
+      'licencia': 'Licencia',
       'odometro': 'Odómetro',
       'horometro': 'Horómetro',
-      'taller': 'Taller autorizado',
-      'definicion_trabajo': 'Definición del trabajo (categoría)',
-      'mecanico_autorizado': 'Mecánico autorizado',
-      'tarea_descripcion': 'Tarea (descripción detallada)',
-      'tipo_mantenimiento': 'Tipo de mantenimiento',
-      'codigo_articulo': 'Código de artículo',
-      'cantidad': 'Cantidad',
-      'costo_unitario': 'Costo Unitario',
-      'costo_total': 'Costo total',
-      'descripcion_insumo': 'Descripción (artículo/insumo utilizado)',
       'fecha_rto': 'Fecha RTO',
       'fecha_vencimiento_seguro': 'Fecha de vencimiento seguro',
       'tipo_seguro': 'Tipo de Seguro'
     };
 
-    requiredFields.forEach(field => {
+    // Validar campos de la sección 1 y 2 (identificación del vehículo)
+    const requiredFieldsSeccion12 = [
+      'empresa', 'grupo', 'matricula', 'vehiculo', 'tipo_servicio', 
+      'licencia', 'odometro', 'horometro', 'fecha_rto', 
+      'fecha_vencimiento_seguro', 'tipo_seguro'
+    ];
+
+    requiredFieldsSeccion12.forEach(field => {
       const value = formData[field];
-      // Para odometro y horometro, validar que existan valores numéricos
       if (field === 'odometro' || field === 'horometro') {
         if (!value || value.trim() === '' || isNaN(parseInt(value, 10))) {
           errors[field] = `${fieldNames[field] || field} es requerido`;
@@ -411,12 +630,51 @@ const NuevosDDJJ = () => {
       }
     });
 
+    // Validar todas las órdenes de trabajo
+    ordenesTrabajoForm.forEach((orden, index) => {
+      if (!orden.numero_orden_trabajo || orden.numero_orden_trabajo.trim() === '') {
+        errors[`numero_orden_trabajo_${orden.id}`] = 'N° orden de trabajo es requerido';
+      }
+      if (!orden.fecha_orden_trabajo || orden.fecha_orden_trabajo.trim() === '') {
+        errors[`fecha_orden_trabajo_${orden.id}`] = 'Fecha de orden de trabajo es requerida';
+      }
+      if (!orden.fecha_egreso || orden.fecha_egreso.trim() === '') {
+        errors[`fecha_egreso_${orden.id}`] = 'Fecha de egreso es requerida';
+      }
+      if (!orden.taller_autorizado || orden.taller_autorizado.trim() === '') {
+        errors[`taller_autorizado_${orden.id}`] = 'Taller autorizado es requerido';
+      }
+      if (!orden.definicion_trabajo || orden.definicion_trabajo.trim() === '') {
+        errors[`definicion_trabajo_${orden.id}`] = 'Definición del trabajo (categoría) es requerida';
+      }
+      if (!orden.mecanico_autorizado || orden.mecanico_autorizado.trim() === '') {
+        errors[`mecanico_autorizado_${orden.id}`] = 'Mecánico autorizado es requerido';
+      }
+      if (!orden.tipo_mantenimiento || orden.tipo_mantenimiento.trim() === '') {
+        errors[`tipo_mantenimiento_${orden.id}`] = 'Tipo de mantenimiento es requerido';
+      }
+      if (!orden.tarea_descripcion || orden.tarea_descripcion.trim() === '') {
+        errors[`tarea_descripcion_${orden.id}`] = 'Tarea (descripción detallada) es requerida';
+      }
+    });
+
+    // Validar insumos (al menos uno debe tener código y costo)
+    const insumosValidos = insumosForm.filter(insumo => 
+      insumo.codigo_articulo && insumo.codigo_articulo.trim() !== '' &&
+      insumo.costo_unitario && parseFloat(insumo.costo_unitario) > 0
+    );
+
+    if (insumosValidos.length === 0 && insumosForm.length > 0) {
+      errors['insumos'] = 'Debe agregar al menos un insumo válido con código y costo unitario';
+    }
+
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      const camposFaltantes = Object.values(errors).slice(0, 5).join(', ');
       setToast({
         type: 'error',
         title: 'Error de validación',
-        message: 'Por favor complete todos los campos requeridos'
+        message: `Por favor complete los siguientes campos: ${camposFaltantes}${Object.keys(errors).length > 5 ? '...' : ''}`
       });
       setTimeout(() => setToast(null), 5000);
       
@@ -873,15 +1131,6 @@ const NuevosDDJJ = () => {
         ? parseInt(vehiculoSeleccionado.id_conductor_activo, 10) 
         : null;
 
-      // Convertir fechas a formato ISO
-      const fechaGeneracion = formData.fecha_orden_trabajo && formData.fecha_orden_trabajo.trim() !== ''
-        ? new Date(formData.fecha_orden_trabajo).toISOString() 
-        : null;
-      
-      const fechaEgreso = formData.fecha && formData.fecha.trim() !== ''
-        ? new Date(formData.fecha).toISOString() 
-        : null;
-
       // Convertir odómetro y horómetro a números
       const odometroValue = formData.odometro 
         ? parseInt(formData.odometro, 10) 
@@ -891,52 +1140,36 @@ const NuevosDDJJ = () => {
         ? parseInt(formData.horometro, 10) 
         : 0;
 
-      // Validar que el número de orden de trabajo no exista
+      // Validar que los números de orden de trabajo no existan
       const ordenesExistentes = await getAllFromTable('orden_trabajo');
       const validOrdenesExistentes = Array.isArray(ordenesExistentes) ? ordenesExistentes : [];
-      const numeroOrdenExiste = validOrdenesExistentes.some(
-        o => o.nro_orden_trabajo === formData.numero_orden_trabajo.trim()
-      );
-
-      if (numeroOrdenExiste) {
+      
+      // Validar números de orden únicos
+      const numerosOrdenForm = ordenesTrabajoForm.map(o => o.numero_orden_trabajo.trim());
+      const numerosDuplicados = numerosOrdenForm.filter((nro, index) => numerosOrdenForm.indexOf(nro) !== index);
+      if (numerosDuplicados.length > 0) {
         setToast({
           type: 'error',
           title: 'Error de validación',
-          message: 'El número de orden de trabajo ya existe. Por favor ingrese otro número.'
+          message: `Los siguientes números de orden están duplicados: ${numerosDuplicados.join(', ')}`
         });
         setTimeout(() => setToast(null), 5000);
         setIsSubmitting(false);
         return;
       }
 
-      // Validar que el número de orden sea consecutivo
-      const numerosOrden = validOrdenesExistentes
-        .map(o => {
-          const nro = o.nro_orden_trabajo;
-          // Intentar convertir a número si es posible
-          if (nro && /^\d+$/.test(String(nro))) {
-            return parseInt(String(nro), 10);
-          }
-          return null;
-        })
-        .filter(n => n !== null);
-      
-      if (numerosOrden.length > 0) {
-        const maxNumero = Math.max(...numerosOrden);
-        const numeroIngresado = parseInt(formData.numero_orden_trabajo.trim(), 10);
-        
-        // Si el número ingresado es numérico, validar consecutividad
-        if (!isNaN(numeroIngresado)) {
-          const siguienteEsperado = maxNumero + 1;
-          if (numeroIngresado !== siguienteEsperado) {
-            setToast({
-              type: 'warning',
-              title: 'Advertencia',
-              message: `El número de orden debería ser ${siguienteEsperado} (siguiente consecutivo después de ${maxNumero}). ¿Desea continuar con ${numeroIngresado}?`
-            });
-            // No bloquear, solo advertir - el usuario puede continuar si lo desea
-          }
-        }
+      // Validar que los números de orden no existan en la base de datos
+      const numerosOrdenExistentes = validOrdenesExistentes.map(o => o.nro_orden_trabajo);
+      const numerosExistentes = numerosOrdenForm.filter(nro => numerosOrdenExistentes.includes(nro));
+      if (numerosExistentes.length > 0) {
+        setToast({
+          type: 'error',
+          title: 'Error de validación',
+          message: `Los siguientes números de orden ya existen: ${numerosExistentes.join(', ')}`
+        });
+        setTimeout(() => setToast(null), 5000);
+        setIsSubmitting(false);
+        return;
       }
 
       // Obtener la empresa del vehículo
@@ -945,7 +1178,13 @@ const NuevosDDJJ = () => {
       // PASO 1: Crear la DDJJ primero
       const ddjjExistentes = await getAllFromTable('declaracion_jurada').catch(() => []);
       const validDDJJExistentes = Array.isArray(ddjjExistentes) ? ddjjExistentes : [];
-      const numeroDDJJ = generarNumeroDDJJ(validDDJJExistentes, fechaGeneracion);
+      
+      // Usar la fecha de la primera orden para generar el número DDJJ
+      const primeraFecha = ordenesTrabajoForm[0]?.fecha_orden_trabajo 
+        ? new Date(ordenesTrabajoForm[0].fecha_orden_trabajo).toISOString()
+        : new Date().toISOString();
+      
+      const numeroDDJJ = generarNumeroDDJJ(validDDJJExistentes, primeraFecha);
 
       // Verificar que el número de DDJJ no exista
       const numeroDDJJExiste = validDDJJExistentes.some(
@@ -967,7 +1206,7 @@ const NuevosDDJJ = () => {
       const ddjjData = {
         numero_ddjj: numeroDDJJ,
         id_empresa: idEmpresaVehiculo,
-        fecha_creacion: fechaGeneracion || new Date().toISOString(),
+        fecha_creacion: primeraFecha,
         estado: 'Pendiente'
       };
 
@@ -979,33 +1218,123 @@ const NuevosDDJJ = () => {
 
       const idDDJJ = ddjjInsertada.id_ddjj;
 
-      // PASO 2: Crear la orden de trabajo asociada a la DDJJ
-      const ordenTrabajoData = {
-        id_vehiculo: parseInt(formData.id_vehiculo, 10),
-        id_conductor: idConductor,
-        id_tipo_mantenimiento: parseInt(formData.tipo_mantenimiento, 10),
-        id_ddjj: idDDJJ, // Asociar la orden de trabajo a la DDJJ
-        nro_orden_trabajo: formData.numero_orden_trabajo.trim(),
-        fecha_generacion: fechaGeneracion,
-        fecha_egreso: fechaEgreso,
-        odometro: odometroValue,
-        horometro: horometroValue,
-        estado: 'Pendiente'
-      };
+      // PASO 2: Crear todas las órdenes de trabajo asociadas a la DDJJ
+      const ordenesInsertadas = [];
+      const vehiculoInfo = vehiculos.find(v => v.id_vehiculo === parseInt(formData.id_vehiculo, 10));
 
-      // Insertar orden de trabajo
-      const ordenInsertada = await insertIntoTable('orden_trabajo', ordenTrabajoData);
-      
-      if (!ordenInsertada || !ordenInsertada.id_orden) {
-        throw new Error('No se pudo crear la orden de trabajo');
+      for (const orden of ordenesTrabajoForm) {
+        // Convertir fechas a formato ISO
+        const fechaGeneracion = orden.fecha_orden_trabajo && orden.fecha_orden_trabajo.trim() !== ''
+          ? new Date(orden.fecha_orden_trabajo).toISOString() 
+          : new Date().toISOString();
+        
+        const fechaEgreso = orden.fecha_egreso && orden.fecha_egreso.trim() !== ''
+          ? new Date(orden.fecha_egreso).toISOString() 
+          : null;
+
+        const ordenTrabajoData = {
+          id_vehiculo: parseInt(formData.id_vehiculo, 10),
+          id_conductor: idConductor,
+          id_tipo_mantenimiento: parseInt(orden.tipo_mantenimiento, 10),
+          id_ddjj: idDDJJ,
+          nro_orden_trabajo: orden.numero_orden_trabajo.trim(),
+          fecha_generacion: fechaGeneracion,
+          fecha_egreso: fechaEgreso,
+          odometro: odometroValue,
+          horometro: horometroValue,
+          estado: 'Pendiente'
+        };
+
+        const ordenInsertada = await insertIntoTable('orden_trabajo', ordenTrabajoData);
+        
+        if (!ordenInsertada || !ordenInsertada.id_orden) {
+          throw new Error(`No se pudo crear la orden de trabajo ${orden.numero_orden_trabajo}`);
+        }
+
+        ordenesInsertadas.push(ordenInsertada);
+
+        // Registrar auditoría para cada orden de trabajo
+        const tipoMantenimientoInfo = tiposMantenimiento.find(t => t.id_tipo === parseInt(orden.tipo_mantenimiento, 10));
+        await registrarAuditoria({
+          usuarioNombre: user?.nombre || 'Usuario desconocido',
+          idUsuarioRef: user?.id_usuario || null,
+          accion: 'CREAR',
+          tipoRegistro: 'orden_trabajo',
+          idRegistro: ordenInsertada.id_orden,
+          idMantenimientoRef: ordenInsertada.id_orden,
+          detalle: `Carga DDJJ: N° DDJJ ${numeroDDJJ}, N° OT ${orden.numero_orden_trabajo.trim()}, Matrícula: ${vehiculoInfo?.matricula || 'N/A'}, Tipo: ${tipoMantenimientoInfo?.descripcion || tipoMantenimientoInfo?.tipo || 'N/A'}`
+        });
       }
 
-      const idOrdenTrabajo = ordenInsertada.id_orden;
-      
-      // Obtener información del vehículo y tipo de mantenimiento para el detalle
-      const vehiculoInfo = vehiculos.find(v => v.id_vehiculo === parseInt(formData.id_vehiculo, 10));
-      const tipoMantenimientoInfo = tiposMantenimiento.find(t => t.id_tipo === parseInt(formData.tipo_mantenimiento, 10));
-      
+      // PASO 3: Crear los detalles de insumos para cada orden
+      // Asociar insumos a todas las órdenes creadas
+      const insumosValidos = insumosForm.filter(insumo => 
+        insumo.codigo_articulo && insumo.codigo_articulo.trim() !== '' &&
+        insumo.costo_unitario && parseFloat(insumo.costo_unitario) > 0
+      );
+
+      let insumosInsertados = 0;
+      if (insumosValidos.length > 0) {
+        // Buscar o crear insumos en el catálogo
+        for (const insumo of insumosValidos) {
+          try {
+            // Buscar el insumo en el catálogo por código
+            let insumoCatalogo = insumos.find(i => 
+              i.codigo_inventario === insumo.codigo_articulo.trim()
+            );
+
+            // Si no existe, crear uno nuevo en el catálogo
+            if (!insumoCatalogo) {
+              try {
+                const nuevoInsumo = await insertIntoTable('insumo_catalogo', {
+                  codigo_inventario: insumo.codigo_articulo.trim(),
+                  descripcion: insumo.descripcion_insumo || insumo.codigo_articulo.trim()
+                });
+                insumoCatalogo = nuevoInsumo;
+              } catch (error) {
+                // Si falla al crear (puede ser por código duplicado), intentar buscar de nuevo
+                console.warn(`Error al crear insumo ${insumo.codigo_articulo}, intentando buscar nuevamente:`, error);
+                const insumosActualizados = await getAllFromTable('insumo_catalogo');
+                insumoCatalogo = insumosActualizados.find(i => 
+                  i.codigo_inventario === insumo.codigo_articulo.trim()
+                );
+                if (!insumoCatalogo) {
+                  console.error(`No se pudo crear ni encontrar el insumo ${insumo.codigo_articulo}`);
+                  continue; // Saltar este insumo
+                }
+              }
+            }
+
+            const idInsumo = insumoCatalogo.id_insumo || insumoCatalogo.id;
+            if (!idInsumo) {
+              console.error(`No se pudo obtener el ID del insumo ${insumo.codigo_articulo}`);
+              continue; // Saltar este insumo
+            }
+
+            const cantidad = parseInt(insumo.cantidad, 10) || 1;
+            const costoUnitario = parseFloat(insumo.costo_unitario) || 0;
+            const costoTotal = parseFloat(insumo.costo_total) || (cantidad * costoUnitario);
+
+            // Asociar el insumo a todas las órdenes creadas
+            for (const ordenInsertada of ordenesInsertadas) {
+              const detalleInsumoData = {
+                id_orden: ordenInsertada.id_orden,
+                id_insumo: idInsumo,
+                cantidad: cantidad,
+                costo_unitario_historico: costoUnitario,
+                costo_total: costoTotal
+              };
+
+              await insertIntoTable('detalle_insumo', detalleInsumoData);
+              insumosInsertados++;
+            }
+          } catch (error) {
+            console.error(`Error al procesar insumo ${insumo.codigo_articulo}:`, error);
+            // Continuar con el siguiente insumo en lugar de fallar todo
+          }
+        }
+      }
+
       // Registrar auditoría para la DDJJ
       await registrarAuditoria({
         usuarioNombre: user?.nombre || 'Usuario desconocido',
@@ -1014,82 +1343,81 @@ const NuevosDDJJ = () => {
         tipoRegistro: 'declaracion_jurada',
         idRegistro: idDDJJ,
         idMantenimientoRef: idDDJJ,
-        detalle: `Carga DDJJ: N° DDJJ ${numeroDDJJ}, N° OT ${formData.numero_orden_trabajo.trim()}, Matrícula: ${vehiculoInfo?.matricula || 'N/A'}, Tipo: ${tipoMantenimientoInfo?.descripcion || 'N/A'}`
+        detalle: `Carga DDJJ: N° DDJJ ${numeroDDJJ}, ${ordenesInsertadas.length} orden(es) de trabajo, Matrícula: ${vehiculoInfo?.matricula || 'N/A'}`
       });
-
-      // Registrar auditoría para la orden de trabajo
-      await registrarAuditoria({
-        usuarioNombre: user?.nombre || 'Usuario desconocido',
-        idUsuarioRef: user?.id_usuario || null,
-        accion: 'CREAR',
-        tipoRegistro: 'orden_trabajo',
-        idRegistro: idOrdenTrabajo,
-        idMantenimientoRef: idOrdenTrabajo,
-        detalle: `Carga DDJJ: N° DDJJ ${numeroDDJJ}, N° OT ${formData.numero_orden_trabajo.trim()}, Matrícula: ${vehiculoInfo?.matricula || 'N/A'}, Tipo: ${tipoMantenimientoInfo?.descripcion || 'N/A'}`
-      });
-
-      // Mecánico autorizado ahora es texto simple, no se guarda en tabla
-      // Los insumos ahora son texto simple, no se guardan en tabla
-      // Se pueden guardar en observaciones o en un campo de texto adicional si es necesario
 
       // Mostrar mensaje de éxito
+      const mensajeInsumos = insumosInsertados > 0 
+        ? `con ${insumosInsertados} detalle(s) de insumo(s)`
+        : '';
       setToast({
         type: 'success',
-        title: 'DDJJ y Orden de trabajo creadas',
-        message: `La DDJJ ${numeroDDJJ} y la orden de trabajo se han guardado correctamente`
+        title: 'DDJJ creada exitosamente',
+        message: `La DDJJ ${numeroDDJJ} con ${ordenesInsertadas.length} orden(es) de trabajo ${mensajeInsumos} se ha guardado correctamente`
       });
+      
       setTimeout(() => {
         setToast(null);
         // Limpiar formulario y redirigir
         setFormData({
-          empresa: '',
+          empresa: empresa?.nombre_empresa || '',
           id_vehiculo: '',
           matricula: '',
           tipo_servicio: '',
-          marca: '',
-          modelo: '',
-          interno: '',
-          numero_licencia: '',
-          numero_orden_trabajo: '',
-          fecha: '',
-          fecha_orden_trabajo: '',
           odometro: '',
+          grupo: '',
+          vehiculo: '',
+          licencia: '',
           horometro: '',
-          inspector: '',
-          auditor: '',
-          observaciones: '',
-          taller: '',
-          definicion_trabajo: '',
-          mecanico_autorizado: '',
-          tarea_descripcion: '',
-          tipo_mantenimiento: '',
-          codigo_articulo: '',
-          cantidad: '',
-          costo_unitario: '',
-          costo_total: '',
-          descripcion_insumo: '',
           fecha_rto: '',
           fecha_vencimiento_seguro: '',
           tipo_seguro: 'Todo riesgo',
           posee_camaras: false,
-          posee_aire_acondicionado: false,
+          aire_acondicionado: false,
           posee_calefaccion: false,
           posee_seguro: false,
           descripcion_siniestros: ''
         });
+        
+        // Resetear órdenes a una inicial
+        const siguienteNumero = generarSiguienteNumeroOrden(ordenesTrabajo);
+        setOrdenesTrabajoForm([{
+          id: 1,
+          numero_orden_trabajo: siguienteNumero,
+          fecha_orden_trabajo: '',
+          fecha_egreso: '',
+          taller_autorizado: '',
+          definicion_trabajo: '',
+          mecanico_autorizado: '',
+          tipo_mantenimiento: '',
+          tarea_descripcion: ''
+        }]);
+        setNextOrdenId(2);
+        
+        // Resetear insumos
+        setInsumosForm([{
+          id: 1,
+          codigo_articulo: '',
+          cantidad: '1',
+          costo_unitario: '',
+          costo_total: '',
+          descripcion_insumo: ''
+        }]);
+        setNextInsumoId(2);
         setFieldErrors({});
+        setCostoUnitarioFocused({});
         navigate('/home');
       }, 2000);
     } catch (error) {
       console.error('Error al guardar:', error);
-      let errorMessage = 'Ocurrió un error al guardar la orden de trabajo';
+      let errorMessage = 'Ocurrió un error al guardar la DDJJ';
       
       if (error.message) {
         errorMessage = error.message;
       } else if (error.code === '23505' || error.code === 409) {
-        errorMessage = 'El número de orden de trabajo ya existe. Por favor ingrese otro número.';
+        errorMessage = 'Uno o más números de orden de trabajo ya existen. Por favor verifique los números ingresados.';
       } else if (error.message?.includes('duplicate')) {
-        errorMessage = 'El número de orden de trabajo ya existe. Por favor ingrese otro número.';
+        errorMessage = 'Uno o más números de orden de trabajo ya existen. Por favor verifique los números ingresados.';
       }
 
       setToast({
@@ -1122,7 +1450,7 @@ const NuevosDDJJ = () => {
     <div className="w-full" style={{ fontFamily: 'Lato, sans-serif' }}>
       {/* Header */}
       <div 
-        className="bg-[#007C8A] w-full mb-4 rounded-lg mt-4 sm:mt-6 flex items-center px-3 sm:px-4 lg:px-6"
+        className="bg-[#007C8A] w-full mb-4 rounded-lg mt-4 sm:mt-6 flex items-center justify-between px-3 sm:px-4 lg:px-6"
         style={{
           minHeight: '70px',
           paddingTop: '12px',
@@ -1134,98 +1462,43 @@ const NuevosDDJJ = () => {
             Generador de declaración jurada
           </h1>
           <p className="text-white text-xs sm:text-sm font-normal" style={{ fontFamily: 'Lato, sans-serif', lineHeight: '1.2' }}>
-            Formulario para dar de alta nuevos usuarios al sistema
+            Formulario para dar de alta nuevas declaraciones juradas
           </p>
         </div>
       </div>
 
-      {/* Botones y filtros de fecha debajo del banner */}
-      <div className="px-3 sm:px-4 md:px-6 mb-6">
-        {/* Contenedor con borde para rango de fechas y botones */}
-        <div 
-          className="rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-end justify-end gap-3"
-          style={{ 
-            border: '1px solid #9CA3AF',
-            fontFamily: 'Lato, sans-serif'
+      {/* Botones superiores */}
+      <div className="px-3 sm:px-4 md:px-6 mb-6 flex items-center justify-end gap-3">
+        <button
+          onClick={handleDownloadTemplate}
+          disabled={isProcessingFile}
+          className="px-4 py-2 rounded-lg shadow-md flex items-center justify-center gap-2 transition-all hover:shadow-lg whitespace-nowrap border border-gray-300 bg-white"
+          style={{
+            color: '#374151',
+            fontFamily: 'Lato, sans-serif',
+            fontWeight: 'bold',
+            fontSize: '14px'
           }}
         >
-          {/* Rango de fechas - alineados a la derecha */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 sm:gap-3">
-            <div className="flex-1 sm:flex-initial">
-              <label 
-                className="block text-xs sm:text-sm font-medium mb-1"
-                style={{ 
-                  color: '#374151',
-                  fontFamily: 'Lato, sans-serif'
-                }}
-              >
-                Desde
-              </label>
-              <input
-                type="date"
-                value={fechaDesde}
-                onChange={(e) => setFechaDesde(e.target.value)}
-                className="w-full sm:w-auto px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#007C8A] focus:border-transparent"
-                style={{ fontFamily: 'Lato, sans-serif', fontSize: isMobile ? '13px' : '14px', minWidth: isMobile ? '100%' : '150px' }}
-              />
-            </div>
-            <div className="flex-1 sm:flex-initial">
-              <label 
-                className="block text-xs sm:text-sm font-medium mb-1"
-                style={{ 
-                  color: '#374151',
-                  fontFamily: 'Lato, sans-serif'
-                }}
-              >
-                Hasta
-              </label>
-              <input
-                type="date"
-                value={fechaHasta}
-                onChange={(e) => setFechaHasta(e.target.value)}
-                min={fechaDesde || undefined}
-                className="w-full sm:w-auto px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#007C8A] focus:border-transparent"
-                style={{ fontFamily: 'Lato, sans-serif', fontSize: isMobile ? '13px' : '14px', minWidth: isMobile ? '100%' : '150px' }}
-              />
-            </div>
-          </div>
-
-          {/* Botones */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <button
-              onClick={handleDownloadTemplate}
-              disabled={isProcessingFile}
-              className="px-4 py-2 rounded-lg shadow-md flex items-center justify-center gap-2 transition-all hover:shadow-lg whitespace-nowrap border border-[#007C8A]"
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#007C8A',
-                fontFamily: 'Lato, sans-serif',
-                fontWeight: 'bold',
-                fontSize: '14px'
-              }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              <span className="hidden sm:inline">Descargar plantilla</span>
-              <span className="sm:hidden">Plantilla</span>
-            </button>
-            <button
-              onClick={() => setShowCargaMasivaModal(true)}
-              disabled={isProcessingFile}
-              className="px-4 py-2 rounded-lg shadow-md flex items-center justify-center gap-2 transition-all hover:shadow-lg whitespace-nowrap"
-              style={{
-                backgroundColor: '#007C8A',
-                color: '#FFFFFF',
-                fontFamily: 'Lato, sans-serif',
-                fontWeight: 'bold',
-                fontSize: '14px'
-              }}
-            >
-              Carga masiva
-            </button>
-          </div>
-        </div>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Descargar plantilla
+        </button>
+        <button
+          onClick={() => setShowCargaMasivaModal(true)}
+          disabled={isProcessingFile}
+          className="px-4 py-2 rounded-lg shadow-md flex items-center justify-center gap-2 transition-all hover:shadow-lg whitespace-nowrap"
+          style={{
+            backgroundColor: '#007C8A',
+            color: '#FFFFFF',
+            fontFamily: 'Lato, sans-serif',
+            fontWeight: 'bold',
+            fontSize: '14px'
+          }}
+        >
+          Carga masiva
+        </button>
       </div>
 
       {/* Contenido del formulario */}
@@ -1267,7 +1540,7 @@ const NuevosDDJJ = () => {
                   color: '#374151'
                 }}
               >
-                Empresa
+                Empresa*
               </label>
               <input
                 type="text"
@@ -1283,7 +1556,56 @@ const NuevosDDJJ = () => {
               />
             </div>
 
-            {/* Select de vehículos con búsqueda */}
+            {/* Columna derecha */}
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  color: '#374151'
+                }}
+              >
+                Grupo*
+              </label>
+              <input
+                type="text"
+                value={formData.grupo}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  fontSize: '14px',
+                  color: '#6B7280'
+                }}
+                placeholder="Grupo"
+              />
+            </div>
+
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  color: '#374151'
+                }}
+              >
+                Matrícula*
+              </label>
+              <input
+                type="text"
+                value={formData.matricula}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  fontSize: '14px',
+                  color: '#6B7280'
+                }}
+                placeholder="Matrícula del vehículo seleccionado"
+              />
+            </div>
+
+            {/* Select de vehículos con búsqueda - Vehículo */}
             <div className="relative" ref={vehiculoDropdownRef}>
               <label 
                 className="block text-sm font-medium mb-2"
@@ -1297,22 +1619,27 @@ const NuevosDDJJ = () => {
               <div className="relative">
                 <input
                   type="text"
-                  value={vehiculoSearchTerm || (formData.id_vehiculo ? `${formData.matricula || ''} - ${formData.interno || ''}` : '')}
+                  value={vehiculoSearchTerm || (formData.id_vehiculo ? `${formData.matricula || ''} - ${formData.vehiculo || ''}` : '')}
                   onChange={(e) => {
                     setVehiculoSearchTerm(e.target.value);
-                    // Si el usuario está editando y ya hay un vehículo seleccionado, limpiar la selección
-                    if (formData.id_vehiculo && e.target.value !== `${formData.matricula || ''} - ${formData.interno || ''}`) {
+                    if (formData.id_vehiculo && e.target.value !== `${formData.matricula || ''} - ${formData.vehiculo || ''}`) {
                       setFormData(prev => ({
                         ...prev,
                         id_vehiculo: '',
                         matricula: '',
-                        marca: '',
-                        modelo: '',
-                        interno: '',
+                        vehiculo: '',
                         tipo_servicio: '',
-                        numero_licencia: '',
                         odometro: '',
-                        horometro: ''
+                        horometro: '',
+                        grupo: '',
+                        licencia: '',
+                        fecha_rto: '',
+                        fecha_vencimiento_seguro: '',
+                        tipo_seguro: 'Todo riesgo',
+                        posee_camaras: false,
+                        aire_acondicionado: false,
+                        posee_calefaccion: false,
+                        posee_seguro: false
                       }));
                     }
                   }}
@@ -1321,7 +1648,7 @@ const NuevosDDJJ = () => {
                       setVehiculoSearchTerm('');
                     }
                   }}
-                  placeholder="Buscar por matrícula o interno..."
+                  placeholder="Buscar vehículo por matrícula..."
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white pr-10 ${
                     fieldErrors.id_vehiculo 
                       ? 'border-red-500 focus:ring-red-500' 
@@ -1341,7 +1668,7 @@ const NuevosDDJJ = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              {vehiculoSearchTerm && vehiculosFiltrados.length > 0 && (
+              {vehiculoSearchTerm && vehiculoSearchTerm.trim() !== '' && vehiculosFiltrados.length > 0 && (
                 <div className="mt-1 border border-gray-300 rounded-lg bg-white shadow-lg max-h-60 overflow-y-auto z-50 absolute w-full">
                   {vehiculosFiltrados.map(v => (
                     <div
@@ -1350,33 +1677,45 @@ const NuevosDDJJ = () => {
                         handleVehiculoChange(v.id_vehiculo);
                         setVehiculoSearchTerm('');
                       }}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      className="px-4 py-2 hover:bg-[#007C8A] hover:text-white cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
                       style={{ fontFamily: 'Lato, sans-serif', fontSize: '14px' }}
                     >
-                      <div className="font-medium" style={{ color: '#374151' }}>
-                        {v.matricula || 'Sin matrícula'}
+                      <div className="font-medium" style={{ color: 'inherit' }}>
+                        {v.matricula || 'Sin matrícula'} - {v.interno || 'N/A'}
                       </div>
-                      <div className="text-sm" style={{ color: '#6B7280' }}>
-                        Interno: {v.interno || 'N/A'} | {v.marca || ''} {v.modelo || ''}
+                      <div className="text-sm opacity-90">
+                        {v.marca && v.modelo ? `${v.marca} ${v.modelo}` : 'Sin información adicional'}
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-              {vehiculoSearchTerm && vehiculosFiltrados.length === 0 && (
+              {vehiculoSearchTerm && vehiculoSearchTerm.trim() !== '' && vehiculosFiltrados.length === 0 && (
                 <div className="mt-1 px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg bg-white z-50 absolute w-full">
-                  No se encontraron vehículos
+                  No se encontraron vehículos de la empresa
                 </div>
               )}
               {!formData.id_vehiculo && !vehiculoSearchTerm && (
-                <p className="mt-1 text-xs text-gray-500" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  Busca por matrícula o interno para seleccionar un vehículo
-                </p>
+                <div className="mt-1">
+                  <p className="text-xs text-gray-500" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    Busca por matrícula para seleccionar un vehículo de la empresa
+                  </p>
+                  {vehiculos.length === 0 && (
+                    <p className="text-xs text-orange-600 mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      ⚠️ No hay vehículos disponibles para esta empresa
+                    </p>
+                  )}
+                  {vehiculos.length > 0 && (
+                    <p className="text-xs text-gray-400 mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      {vehiculos.length} vehículo(s) disponible(s)
+                    </p>
+                  )}
+                </div>
               )}
               {formData.id_vehiculo && !vehiculoSearchTerm && (
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm font-medium text-green-800" style={{ fontFamily: 'Lato, sans-serif' }}>
-                    ✓ Vehículo seleccionado: {formData.matricula} - {formData.interno}
+                    ✓ Vehículo seleccionado: {formData.matricula} - {formData.vehiculo}
                   </p>
                 </div>
               )}
@@ -1395,99 +1734,24 @@ const NuevosDDJJ = () => {
                   color: '#374151'
                 }}
               >
-                Marca*
-              </label>
-              <input
-                type="text"
-                value={formData.marca}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Ingresa marca"
-              />
-            </div>
-
-
-            {/* Columna derecha */}
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Modelo*
-              </label>
-              <input
-                type="text"
-                value={formData.modelo}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Ingresa modelo"
-              />
-            </div>
-
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
                 Tipo de servicio*
               </label>
-           <input
-                type="text"
+              <select
                 value={formData.tipo_servicio}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                onChange={(e) => handleChange('tipo_servicio', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007C8A] bg-white"
                 style={{ 
                   fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Tipo de servicio"
-              />
-              {fieldErrors.tipo_servicio && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.tipo_servicio}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
+                  fontSize: '14px'
                 }}
               >
-                Interno*
-              </label>
-              <input
-                type="text"
-                value={formData.interno}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Ingresa interno"
-              />
+                <option value="">Selecciona tipo de servicio</option>
+                {tiposServicio.map((tipo, index) => (
+                  <option key={index} value={tipo}>
+                    {tipo}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -1502,7 +1766,7 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.numero_licencia}
+                value={formData.licencia}
                 disabled
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
                 style={{ 
@@ -1510,7 +1774,7 @@ const NuevosDDJJ = () => {
                   fontSize: '14px',
                   color: '#6B7280'
                 }}
-                placeholder="Número de licencia"
+                placeholder="Licencia"
               />
             </div>
 
@@ -1526,7 +1790,7 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.odometro ? `${formData.odometro} km` : ''}
+                value={formData.odometro ? `${formatNumber(formData.odometro)} km` : ''}
                 disabled
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
                 style={{ 
@@ -1550,7 +1814,7 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.horometro ? `${formData.horometro} hs` : ''}
+                value={formData.horometro ? `${formatNumber(formData.horometro)} hr` : ''}
                 disabled
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
                 style={{ 
@@ -1558,13 +1822,13 @@ const NuevosDDJJ = () => {
                   fontSize: '14px',
                   color: '#6B7280'
                 }}
-                placeholder="0 hs"
+                placeholder="0 hr"
               />
             </div>
           </div>
         </div>
 
-        {/* Sección 2: Estado y vencimientos de unidad */}
+        {/* Sección 2: Estado y movimientos de unidad */}
         <div 
           className="bg-white rounded-lg shadow-md mb-6"
           style={{
@@ -1579,7 +1843,7 @@ const NuevosDDJJ = () => {
               color: '#1F2937'
             }}
           >
-            Estado y vencimientos de unidad
+            Estado y movimientos de unidad
           </h2>
           <p 
             className="text-sm mb-6"
@@ -1607,6 +1871,7 @@ const NuevosDDJJ = () => {
                 <input
                   type="date"
                   value={formData.fecha_rto}
+                  onChange={(e) => handleChange('fecha_rto', e.target.value)}
                   disabled
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 pr-10"
                   style={{ 
@@ -1615,18 +1880,38 @@ const NuevosDDJJ = () => {
                     color: '#6B7280'
                   }}
                 />
-                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#007C8A] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              {fieldErrors.fecha_rto && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha_rto}
-                </p>
-              )}
             </div>
 
             {/* Columna derecha */}
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  color: '#374151'
+                }}
+              >
+                Tipo de Seguro*
+              </label>
+              <input
+                type="text"
+                value={formData.tipo_seguro}
+                onChange={(e) => handleChange('tipo_seguro', e.target.value)}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                style={{ 
+                  fontFamily: 'Lato, sans-serif',
+                  fontSize: '14px',
+                  color: '#6B7280'
+                }}
+                placeholder="Todo riesgo"
+              />
+            </div>
+
             <div>
               <label 
                 className="block text-sm font-medium mb-2"
@@ -1641,6 +1926,7 @@ const NuevosDDJJ = () => {
                 <input
                   type="date"
                   value={formData.fecha_vencimiento_seguro}
+                  onChange={(e) => handleChange('fecha_vencimiento_seguro', e.target.value)}
                   disabled
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 pr-10"
                   style={{ 
@@ -1649,52 +1935,19 @@ const NuevosDDJJ = () => {
                     color: '#6B7280'
                   }}
                 />
-                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#007C8A] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              {fieldErrors.fecha_vencimiento_seguro && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha_vencimiento_seguro}
-                </p>
-              )}
             </div>
 
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Tipo de Seguro*
-              </label>
-              <input
-                type="text"
-                value={formData.tipo_seguro}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Todo riesgo"
-              />
-              {fieldErrors.tipo_seguro && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.tipo_seguro}
-                </p>
-              )}
-            </div>
-
-            {/* Checkboxes */}
+            {/* Checkboxes - Columna izquierda */}
             <div className="flex flex-col gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
                 <input
                   type="checkbox"
                   checked={formData.posee_camaras}
+                  onChange={(e) => handleChange('posee_camaras', e.target.checked)}
                   disabled
                   className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
                   style={{ 
@@ -1705,10 +1958,11 @@ const NuevosDDJJ = () => {
                   Cámaras
                 </span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
                 <input
                   type="checkbox"
-                  checked={formData.posee_aire_acondicionado}
+                  checked={formData.aire_acondicionado}
+                  onChange={(e) => handleChange('aire_acondicionado', e.target.checked)}
                   disabled
                   className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
                   style={{ 
@@ -1719,10 +1973,15 @@ const NuevosDDJJ = () => {
                   Aire acondicionado
                 </span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+            </div>
+
+            {/* Checkboxes - Columna derecha */}
+            <div className="flex flex-col gap-3">
+              <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
                 <input
                   type="checkbox"
                   checked={formData.posee_calefaccion}
+                  onChange={(e) => handleChange('posee_calefaccion', e.target.checked)}
                   disabled
                   className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
                   style={{ 
@@ -1733,10 +1992,11 @@ const NuevosDDJJ = () => {
                   Calefacción
                 </span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
                 <input
                   type="checkbox"
                   checked={formData.posee_seguro}
+                  onChange={(e) => handleChange('posee_seguro', e.target.checked)}
                   disabled
                   className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
                   style={{ 
@@ -1769,40 +2029,64 @@ const NuevosDDJJ = () => {
                   fontFamily: 'Lato, sans-serif',
                   fontSize: '14px'
                 }}
-                placeholder="Ingresa la descripción de siniestros (opcional)"
+                placeholder="Ingresa la descripción de siniestros"
               />
             </div>
           </div>
         </div>
 
-        {/* Sección 3: Información de trabajo */}
-        <div 
-          className="bg-white rounded-lg shadow-md mb-6"
-          style={{
-            padding: '24px',
-            border: '1px solid #E5E7EB'
-          }}
-        >
-          <h2 
-            className="text-lg font-bold mb-2"
-            style={{ 
-              fontFamily: 'Lato, sans-serif',
-              color: '#1F2937'
+        {/* Sección 3: Información de trabajo - Múltiples órdenes */}
+        {ordenesTrabajoForm.map((orden, ordenIndex) => (
+          <div 
+            key={orden.id}
+            className="bg-white rounded-lg shadow-md mb-6"
+            style={{
+              padding: '24px',
+              border: '1px solid #E5E7EB'
             }}
           >
-            Información de trabajo
-          </h2>
-          <p 
-            className="text-sm mb-6"
-            style={{ 
-              fontFamily: 'Lato, sans-serif',
-              color: '#6B7280'
-            }}
-          >
-            Llenar los campos obligatorios.
-          </p>
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h2 
+                  className="text-lg font-bold mb-2"
+                  style={{ 
+                    fontFamily: 'Lato, sans-serif',
+                    color: '#1F2937'
+                  }}
+                >
+                  Información de trabajo
+                </h2>
+                <p 
+                  className="text-sm mb-6"
+                  style={{ 
+                    fontFamily: 'Lato, sans-serif',
+                    color: '#6B7280'
+                  }}
+                >
+                  Llenar los campos obligatorios.
+                </p>
+              </div>
+              {/* Botón eliminar orden - solo si hay más de una */}
+              {ordenesTrabajoForm.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => eliminarOrdenTrabajo(orden.id)}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap flex items-center gap-2"
+                  style={{ 
+                    fontFamily: 'Lato, sans-serif',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#007C8A'
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#007C8A' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                  </svg>
+                </button>
+              )}
+            </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Columna izquierda */}
             <div>
               <label 
@@ -1816,7 +2100,7 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.numero_orden_trabajo}
+                value={orden.numero_orden_trabajo}
                 disabled
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
                 style={{ 
@@ -1826,9 +2110,9 @@ const NuevosDDJJ = () => {
                 }}
                 placeholder="Generado automáticamente"
               />
-              {fieldErrors.numero_orden_trabajo && (
+              {fieldErrors[`numero_orden_trabajo_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.numero_orden_trabajo}
+                  {fieldErrors[`numero_orden_trabajo_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -1847,11 +2131,11 @@ const NuevosDDJJ = () => {
               <div className="relative">
                 <input
                   type="date"
-                  value={formData.fecha_orden_trabajo ? formData.fecha_orden_trabajo.split('T')[0] : ''}
+                  value={orden.fecha_orden_trabajo ? orden.fecha_orden_trabajo.split('T')[0] : ''}
                   onChange={(e) => {
                     const dateValue = e.target.value;
-                    const timeValue = formData.fecha_orden_trabajo ? formData.fecha_orden_trabajo.split('T')[1] || '00:00' : '00:00';
-                    handleChange('fecha_orden_trabajo', dateValue ? `${dateValue}T${timeValue}` : '');
+                    const timeValue = orden.fecha_orden_trabajo ? orden.fecha_orden_trabajo.split('T')[1] || '00:00' : '00:00';
+                    actualizarOrdenTrabajo(orden.id, 'fecha_orden_trabajo', dateValue ? `${dateValue}T${timeValue}` : '');
                   }}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white pr-10 ${
                     fieldErrors.fecha_orden_trabajo 
@@ -1867,9 +2151,9 @@ const NuevosDDJJ = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              {fieldErrors.fecha_orden_trabajo && (
+              {fieldErrors[`fecha_orden_trabajo_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha_orden_trabajo}
+                  {fieldErrors[`fecha_orden_trabajo_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -1887,14 +2171,14 @@ const NuevosDDJJ = () => {
               <div className="relative">
                 <input
                   type="date"
-                  value={formData.fecha ? formData.fecha.split('T')[0] : ''}
+                  value={orden.fecha_egreso ? orden.fecha_egreso.split('T')[0] : ''}
                   onChange={(e) => {
                     const dateValue = e.target.value;
-                    const timeValue = formData.fecha ? formData.fecha.split('T')[1] || '00:00' : '00:00';
-                    handleChange('fecha', dateValue ? `${dateValue}T${timeValue}` : '');
+                    const timeValue = orden.fecha_egreso ? orden.fecha_egreso.split('T')[1] || '00:00' : '00:00';
+                    actualizarOrdenTrabajo(orden.id, 'fecha_egreso', dateValue ? `${dateValue}T${timeValue}` : '');
                   }}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white pr-10 ${
-                    fieldErrors.fecha 
+                    fieldErrors.fecha_egreso 
                       ? 'border-red-500 focus:ring-red-500' 
                       : 'border-gray-300 focus:ring-[#007C8A]'
                   }`}
@@ -1907,9 +2191,9 @@ const NuevosDDJJ = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              {fieldErrors.fecha && (
+              {fieldErrors[`fecha_egreso_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha}
+                  {fieldErrors[`fecha_egreso_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -1948,10 +2232,10 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.taller}
-                onChange={(e) => handleChange('taller', e.target.value)}
+                value={orden.taller_autorizado}
+                onChange={(e) => actualizarOrdenTrabajo(orden.id, 'taller_autorizado', e.target.value)}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.taller 
+                  fieldErrors.taller_autorizado 
                     ? 'border-red-500 focus:ring-red-500' 
                     : 'border-gray-300 focus:ring-[#007C8A]'
                 }`}
@@ -1961,9 +2245,9 @@ const NuevosDDJJ = () => {
                 }}
                 placeholder="Ingresa el taller autorizado"
               />
-              {fieldErrors.taller && (
+              {fieldErrors[`taller_autorizado_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.taller}
+                  {fieldErrors[`taller_autorizado_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -1979,8 +2263,8 @@ const NuevosDDJJ = () => {
                 Definición del trabajo (categoría)*
               </label>
               <select
-                value={formData.definicion_trabajo}
-                onChange={(e) => handleChange('definicion_trabajo', e.target.value)}
+                value={orden.definicion_trabajo}
+                onChange={(e) => actualizarOrdenTrabajo(orden.id, 'definicion_trabajo', e.target.value)}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
                   fieldErrors.definicion_trabajo 
                     ? 'border-red-500 focus:ring-red-500' 
@@ -1999,9 +2283,9 @@ const NuevosDDJJ = () => {
                 <option value="Electricidad/Electrónica">Electricidad/Electrónica</option>
                 <option value="Otros">Otros</option>
               </select>
-              {fieldErrors.definicion_trabajo && (
+              {fieldErrors[`definicion_trabajo_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.definicion_trabajo}
+                  {fieldErrors[`definicion_trabajo_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -2018,8 +2302,8 @@ const NuevosDDJJ = () => {
               </label>
               <input
                 type="text"
-                value={formData.mecanico_autorizado}
-                onChange={(e) => handleChange('mecanico_autorizado', e.target.value)}
+                value={orden.mecanico_autorizado}
+                onChange={(e) => actualizarOrdenTrabajo(orden.id, 'mecanico_autorizado', e.target.value)}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
                   fieldErrors.mecanico_autorizado 
                     ? 'border-red-500 focus:ring-red-500' 
@@ -2031,9 +2315,9 @@ const NuevosDDJJ = () => {
                 }}
                 placeholder="Ingresa el nombre del mecánico autorizado"
               />
-              {fieldErrors.mecanico_autorizado && (
+              {fieldErrors[`mecanico_autorizado_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.mecanico_autorizado}
+                  {fieldErrors[`mecanico_autorizado_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -2049,10 +2333,10 @@ const NuevosDDJJ = () => {
                 Tipo de mantenimiento*
               </label>
               <select
-                value={formData.tipo_mantenimiento}
-                onChange={(e) => handleChange('tipo_mantenimiento', e.target.value)}
+                value={orden.tipo_mantenimiento}
+                onChange={(e) => actualizarOrdenTrabajo(orden.id, 'tipo_mantenimiento', e.target.value)}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.tipo_mantenimiento 
+                  fieldErrors[`tipo_mantenimiento_${orden.id}`] 
                     ? 'border-red-500 focus:ring-red-500' 
                     : 'border-gray-300 focus:ring-[#007C8A]'
                 }`}
@@ -2062,17 +2346,19 @@ const NuevosDDJJ = () => {
                 }}
               >
                 <option value="">Selecciona tipo de mantenimiento</option>
-                {tiposMantenimiento
-                  .filter(tipo => tipo.id_tipo === 1 || tipo.id_tipo === 2)
-                  .map(tipo => (
+                {tiposMantenimiento && tiposMantenimiento.length > 0 ? (
+                  tiposMantenimiento.map(tipo => (
                     <option key={tipo.id_tipo} value={tipo.id_tipo}>
-                      {tipo.descripcion}
+                      {tipo.tipo || tipo.descripcion || 'Sin descripción'}
                     </option>
-                  ))}
+                  ))
+                ) : (
+                  <option value="" disabled>Cargando tipos de mantenimiento...</option>
+                )}
               </select>
-              {fieldErrors.tipo_mantenimiento && (
+              {fieldErrors[`tipo_mantenimiento_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.tipo_mantenimiento}
+                  {fieldErrors[`tipo_mantenimiento_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -2088,11 +2374,11 @@ const NuevosDDJJ = () => {
                 Tarea (descripción detallada)*
               </label>
               <textarea
-                value={formData.tarea_descripcion}
-                onChange={(e) => handleChange('tarea_descripcion', e.target.value)}
+                value={orden.tarea_descripcion}
+                onChange={(e) => actualizarOrdenTrabajo(orden.id, 'tarea_descripcion', e.target.value)}
                 rows={3}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.tarea_descripcion 
+                  fieldErrors[`tarea_descripcion_${orden.id}`] 
                     ? 'border-red-500 focus:ring-red-500' 
                     : 'border-gray-300 focus:ring-[#007C8A]'
                 }`}
@@ -2102,9 +2388,9 @@ const NuevosDDJJ = () => {
                 }}
                 placeholder="Ingresa la descripción detallada de la tarea"
               />
-              {fieldErrors.tarea_descripcion && (
+              {fieldErrors[`tarea_descripcion_${orden.id}`] && (
                 <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.tarea_descripcion}
+                  {fieldErrors[`tarea_descripcion_${orden.id}`]}
                 </p>
               )}
             </div>
@@ -2131,426 +2417,273 @@ const NuevosDDJJ = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Columna izquierda */}
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Código de artículo*
-              </label>
-              <input
-                type="text"
-                value={formData.codigo_articulo}
-                onChange={(e) => handleChange('codigo_articulo', e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.codigo_articulo 
-                    ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-gray-300 focus:ring-[#007C8A]'
-                }`}
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px'
-                }}
-                placeholder="Ingresa el código de artículo"
-              />
-              {fieldErrors.codigo_articulo && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.codigo_articulo}
-                </p>
-              )}
-            </div>
+            {/* Contenedor de insumos que ocupa el 100% del ancho */}
+            <div className="md:col-span-2 w-full" style={{ width: '100%' }}>
+              {/* Lista de insumos - Cada insumo en una fila horizontal según imagen */}
+              {insumosForm.map((insumo, index) => (
+                <div key={insumo.id} className="mb-4 w-full">
+                  {/* Primera fila: Campos del insumo */}
+                  <div className="flex flex-nowrap gap-4 items-end w-full mb-4" style={{ width: '100%', maxWidth: '100%' }}>
+                    {/* Código de artículo */}
+                    <div 
+                      ref={index === 0 ? codigoArtRef : null}
+                      className="flex-1" 
+                      style={{ flex: '1 1 auto', minWidth: 0 }}
+                    >
+                      <label 
+                        className="block text-sm font-medium mb-2"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          color: '#374151'
+                        }}
+                      >
+                        Codigo art*
+                      </label>
+                      <input
+                        type="text"
+                        value={insumo.codigo_articulo}
+                        onChange={(e) => actualizarInsumo(insumo.id, 'codigo_articulo', e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007C8A] bg-white"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          fontSize: '14px'
+                        }}
+                        placeholder="MP1-A1-000002356"
+                      />
+                    </div>
 
-            {/* Columna derecha */}
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Cantidad*
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={formData.cantidad}
-                  onChange={(e) => handleChange('cantidad', e.target.value)}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white pr-10 ${
-                    fieldErrors.cantidad 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:ring-[#007C8A]'
-                  }`}
-                  style={{ 
-                    fontFamily: 'Lato, sans-serif',
-                    fontSize: '14px'
-                  }}
-                  placeholder="1"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                    {/* Costo Unitario */}
+                    <div 
+                      ref={index === 0 ? costoUnitarioRef : null}
+                      className="flex-1" 
+                      style={{ flex: '1 1 auto', minWidth: 0 }}
+                    >
+                      <label 
+                        className="block text-sm font-medium mb-2"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          color: '#374151'
+                        }}
+                      >
+                        Costo unitario*
+                      </label>
+                      <input
+                        type="text"
+                        value={costoUnitarioFocused[insumo.id]
+                          ? (insumo.costo_unitario || '') 
+                          : (insumo.costo_unitario ? formatCurrency(insumo.costo_unitario) : '')
+                        }
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
+                          // Permitir que el usuario escriba con formato (puntos y comas)
+                          // Solo remover caracteres no numéricos excepto puntos y comas
+                          const cleaned = inputValue.replace(/[^\d,.]/g, '');
+                          // Guardar el valor tal como está (con formato) para que el usuario lo vea
+                          // El cálculo se hará correctamente con cleanAndParseNumber
+                          actualizarInsumo(insumo.id, 'costo_unitario', cleaned);
+                        }}
+                        onFocus={() => {
+                          setCostoUnitarioFocused(prev => ({ ...prev, [insumo.id]: true }));
+                        }}
+                        onBlur={() => {
+                          setCostoUnitarioFocused(prev => ({ ...prev, [insumo.id]: false }));
+                          if (insumo.costo_unitario) {
+                            // Limpiar y parsear correctamente el valor antes de guardarlo
+                            const numValue = cleanAndParseNumber(insumo.costo_unitario);
+                            actualizarInsumo(insumo.id, 'costo_unitario', String(numValue));
+                          }
+                        }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007C8A] bg-white"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          fontSize: '14px'
+                        }}
+                        placeholder="250.000,00"
+                      />
+                    </div>
+
+                    {/* Cantidad */}
+                    <div 
+                      ref={index === 0 ? cantidadRef : null}
+                      className="flex-1" 
+                      style={{ flex: '1 1 auto', minWidth: 0 }}
+                    >
+                      <label 
+                        className="block text-sm font-medium mb-2"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          color: '#374151'
+                        }}
+                      >
+                        cant*
+                      </label>
+                      <select
+                        value={insumo.cantidad || '1'}
+                        onChange={(e) => actualizarInsumo(insumo.id, 'cantidad', e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007C8A] bg-white"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          fontSize: '14px'
+                        }}
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 50, 100].map(num => (
+                          <option key={num} value={String(num)}>{num}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* SUBTOTAL - Al lado de cant */}
+                    <div 
+                      ref={index === 0 ? subtotalRef : null}
+                      className="flex-1" 
+                      style={{ flex: '1 1 auto', minWidth: 0 }}
+                    >
+                      <label 
+                        className="block text-sm font-medium mb-2"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          color: '#374151'
+                        }}
+                      >
+                        SUBTOTAL*
+                      </label>
+                      <input
+                        type="text"
+                        value={insumo.costo_total && parseFloat(insumo.costo_total) > 0 
+                          ? formatCurrency(insumo.costo_total) 
+                          : '$ 0,00'}
+                        disabled
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                        style={{ 
+                          fontFamily: 'Lato, sans-serif',
+                          fontSize: '14px',
+                          color: '#6B7280'
+                        }}
+                      />
+                    </div>
+
+                    {/* Botón: + AGREGAR solo en la primera fila, - Quitar en las demás */}
+                    <div className="flex items-end flex-shrink-0">
+                      {index === 0 ? (
+                        <button
+                          type="button"
+                          onClick={agregarInsumo}
+                          className="px-4 py-2 bg-[#007C8A] text-white rounded-lg hover:bg-[#005A63] transition-colors whitespace-nowrap flex items-center gap-2"
+                          style={{ 
+                            fontFamily: 'Lato, sans-serif',
+                            fontSize: '14px',
+                            fontWeight: '500'
+                          }}
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                          
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => eliminarInsumo(insumo.id)}
+                          className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap flex items-center gap-2"
+                          style={{ 
+                            fontFamily: 'Lato, sans-serif',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#007C8A'
+                          }}
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#007C8A' }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          </svg>
+                           
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              ))}
+
+              {/* TOTAL - Siempre al pie, debajo de todas las filas, alineado con SUBTOTAL */}
+              <div className="flex flex-nowrap gap-4 items-end w-full mt-4" style={{ width: '100%', maxWidth: '100%' }}>
+                {/* Espaciadores para alinear con los campos de arriba - mismos anchos exactos */}
+                <div 
+                  data-espaciador="0"
+                  style={{ 
+                    flexShrink: 0,
+                    width: codigoArtRef.current ? `${codigoArtRef.current.offsetWidth}px` : 'auto'
+                  }}
+                ></div>
+                <div 
+                  data-espaciador="1"
+                  style={{ 
+                    flexShrink: 0,
+                    width: costoUnitarioRef.current ? `${costoUnitarioRef.current.offsetWidth}px` : 'auto'
+                  }}
+                ></div>
+                <div 
+                  data-espaciador="2"
+                  style={{ 
+                    flexShrink: 0,
+                    width: cantidadRef.current ? `${cantidadRef.current.offsetWidth}px` : 'auto'
+                  }}
+                ></div>
+                
+                {/* TOTAL - Justo debajo de SUBTOTAL, mismo tamaño que SUBTOTAL */}
+                <div 
+                  ref={totalRef}
+                  style={{ 
+                    flexShrink: 0,
+                    width: subtotalRef.current ? `${subtotalRef.current.offsetWidth}px` : 'auto'
+                  }}
+                >
+                  <label 
+                    className="block text-sm font-medium mb-2"
+                    style={{ 
+                      fontFamily: 'Lato, sans-serif',
+                      color: '#374151'
+                    }}
+                  >
+                    TOTAL
+                  </label>
+                  <input
+                    type="text"
+                    value={calcularTotalGeneral() > 0 
+                      ? formatCurrency(calcularTotalGeneral()) 
+                      : '$ 0,00'}
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                    style={{ 
+                      fontFamily: 'Lato, sans-serif',
+                      fontSize: '14px',
+                      color: '#6B7280',
+                      fontWeight: '600'
+                    }}
+                  />
+                </div>
+                
+                {/* Espaciador para mantener alineación con el botón */}
+                <div className="flex-shrink-0" style={{ width: 'auto' }}></div>
               </div>
-              {fieldErrors.cantidad && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.cantidad}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Costo Unitario*
-              </label>
-              <input
-                type="text"
-                value={costoUnitarioFocused 
-                  ? (formData.costo_unitario || '') 
-                  : (formData.costo_unitario ? formatCurrency(formData.costo_unitario) : '')
-                }
-                onChange={(e) => {
-                  // Permitir escribir solo números y punto/coma decimal
-                  const inputValue = e.target.value;
-                  // Permitir números, punto, coma y espacios en blanco (que se eliminarán)
-                  const cleaned = inputValue.replace(/[^\d,.-]/g, '').replace(',', '.');
-                  // Si hay múltiples puntos, mantener solo el primero
-                  const parts = cleaned.split('.');
-                  const finalValue = parts.length > 2 
-                    ? parts[0] + '.' + parts.slice(1).join('')
-                    : cleaned;
-                  
-                  handleChange('costo_unitario', finalValue);
-                }}
-                onFocus={() => {
-                  setCostoUnitarioFocused(true);
-                }}
-                onBlur={() => {
-                  setCostoUnitarioFocused(false);
-                  // Asegurar que el valor sea numérico válido
-                  if (formData.costo_unitario) {
-                    const numValue = parseFloat(formData.costo_unitario) || 0;
-                    handleChange('costo_unitario', String(numValue));
-                  }
-                }}
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.costo_unitario 
-                    ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-gray-300 focus:ring-[#007C8A]'
-                }`}
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px'
-                }}
-                placeholder="$ 0,00"
-              />
-              {fieldErrors.costo_unitario && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.costo_unitario}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Costo total*
-              </label>
-              <input
-                type="text"
-                value={formData.costo_total ? formatCurrency(formData.costo_total) : ''}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="$ 0,00"
-              />
-              {fieldErrors.costo_total && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.costo_total}
-                </p>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Descripción (artículo/insumo utilizado)*
-              </label>
-              <textarea
-                value={formData.descripcion_insumo}
-                onChange={(e) => handleChange('descripcion_insumo', e.target.value)}
-                rows={3}
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 bg-white ${
-                  fieldErrors.descripcion_insumo 
-                    ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-gray-300 focus:ring-[#007C8A]'
-                }`}
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px'
-                }}
-                placeholder="Ingresa la descripción del artículo/insumo utilizado (nota)"
-              />
-              {fieldErrors.descripcion_insumo && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.descripcion_insumo}
-                </p>
-              )}
-            </div>
-          </div>
-
-            {/* Botón + Insumos */}
-            <div className="md:col-span-2 mt-4">
-              <button
-                type="button"
-                className="px-4 py-2 bg-[#007C8A] text-white rounded-lg hover:bg-[#005A63] transition-colors font-medium text-sm flex items-center gap-2"
-                style={{ fontFamily: 'Lato, sans-serif' }}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                + Insumos
-              </button>
             </div>
           </div>
         </div>
-        <div 
-          className="bg-white rounded-lg shadow-md mb-6"
+        ))}
+      </div>
+
+      {/* Botón Nueva orden de trabajo - Posicionado después de las órdenes */}
+      <div className="px-3 sm:px-4 md:px-6 mb-6 flex justify-start">
+        <button
+          onClick={agregarOrdenTrabajo}
+          disabled={isSubmitting}
+          className="px-6 py-2 rounded-lg bg-[#007C8A] text-white transition-all hover:bg-[#005A63] disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
-            padding: '24px',
-            border: '1px solid #E5E7EB'
+            fontFamily: 'Lato, sans-serif',
+            fontWeight: 'bold',
+            fontSize: '14px'
           }}
         >
-          <h2 
-            className="text-lg font-bold mb-2"
-            style={{ 
-              fontFamily: 'Lato, sans-serif',
-              color: '#1F2937'
-            }}
-          >
-            Estado y vencimientos de unidad
-          </h2>
-          <p 
-            className="text-sm mb-6"
-            style={{ 
-              fontFamily: 'Lato, sans-serif',
-              color: '#6B7280'
-            }}
-          >
-            Llenar los campos obligatorios.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Columna izquierda */}
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Fecha RTO*
-              </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={formData.fecha_rto}
-                  disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 pr-10"
-                  style={{ 
-                    fontFamily: 'Lato, sans-serif',
-                    fontSize: '14px',
-                    color: '#6B7280'
-                  }}
-                />
-                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#007C8A] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              {fieldErrors.fecha_rto && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha_rto}
-                </p>
-              )}
-            </div>
-
-            {/* Columna derecha */}
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Fecha de vencimiento seguro*
-              </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={formData.fecha_vencimiento_seguro}
-                  disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 pr-10"
-                  style={{ 
-                    fontFamily: 'Lato, sans-serif',
-                    fontSize: '14px',
-                    color: '#6B7280'
-                  }}
-                />
-                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#007C8A] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              {fieldErrors.fecha_vencimiento_seguro && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.fecha_vencimiento_seguro}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Tipo de Seguro*
-              </label>
-              <input
-                type="text"
-                value={formData.tipo_seguro}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px',
-                  color: '#6B7280'
-                }}
-                placeholder="Todo riesgo"
-              />
-              {fieldErrors.tipo_seguro && (
-                <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  {fieldErrors.tipo_seguro}
-                </p>
-              )}
-            </div>
-
-            {/* Checkboxes */}
-            <div className="flex flex-col gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.posee_camaras}
-                  disabled
-                  className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
-                  style={{ 
-                    accentColor: '#007C8A'
-                  }}
-                />
-                <span style={{ fontFamily: 'Lato, sans-serif', fontSize: '14px', color: '#374151' }}>
-                  Cámaras
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.posee_aire_acondicionado}
-                  disabled
-                  className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
-                  style={{ 
-                    accentColor: '#007C8A'
-                  }}
-                />
-                <span style={{ fontFamily: 'Lato, sans-serif', fontSize: '14px', color: '#374151' }}>
-                  Aire acondicionado
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.posee_calefaccion}
-                  disabled
-                  className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
-                  style={{ 
-                    accentColor: '#007C8A'
-                  }}
-                />
-                <span style={{ fontFamily: 'Lato, sans-serif', fontSize: '14px', color: '#374151' }}>
-                  Calefacción
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.posee_seguro}
-                  disabled
-                  className="w-4 h-4 text-[#007C8A] focus:ring-[#007C8A] rounded border-gray-300"
-                  style={{ 
-                    accentColor: '#007C8A'
-                  }}
-                />
-                <span style={{ fontFamily: 'Lato, sans-serif', fontSize: '14px', color: '#374151' }}>
-                  Seguro
-                </span>
-              </label>
-            </div>
-
-            {/* Descripción siniestros - campo completo */}
-            <div className="md:col-span-2">
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  color: '#374151'
-                }}
-              >
-                Descripción siniestros
-              </label>
-              <textarea
-                value={formData.descripcion_siniestros}
-                onChange={(e) => handleChange('descripcion_siniestros', e.target.value)}
-                rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007C8A] bg-white"
-                style={{ 
-                  fontFamily: 'Lato, sans-serif',
-                  fontSize: '14px'
-                }}
-                placeholder="Ingresa la descripción de siniestros (opcional)"
-              />
-            </div>
-          </div>
-        </div>
+          Nueva orden de trabajo
+        </button>
       </div>
 
       {/* Footer */}
@@ -2581,14 +2714,14 @@ const NuevosDDJJ = () => {
           <button
             onClick={handleSave}
             disabled={isSubmitting}
-            className="px-6 py-2 rounded-lg bg-gray-600 text-white transition-all hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 rounded-lg bg-[#007C8A] text-white transition-all hover:bg-[#005A63] disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               fontFamily: 'Lato, sans-serif',
               fontWeight: 'bold',
               fontSize: '14px'
             }}
           >
-            {isSubmitting ? 'Generando reporte...' : 'Generar reporte'}
+            {isSubmitting ? 'Generando DDJJ...' : 'Generar DDJJ'}
           </button>
         </div>
       </div>

@@ -38,7 +38,7 @@ const DB_TYPE = process.env.DB_TYPE || 'supabase'; // 'supabase' o 'postgres'
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://weberwavolitwvmjfhap.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_secret_LDZn81mde7XPA-qb-AMhVQ_bQ2DBa98';
 
-// Configuración para PostgreSQL local
+// Configuración para PostgreSQL (local o Neon)
 const DB_CONFIG = {
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
@@ -46,6 +46,9 @@ const DB_CONFIG = {
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || '123456',
 };
+
+// Configuración SSL para Neon (requerido)
+const DB_SSLMODE = process.env.DB_SSLMODE || 'prefer';
 
 // Pool de conexiones para PostgreSQL local
 let postgresPool = null;
@@ -56,16 +59,23 @@ let postgresPool = null;
 function getDatabaseClient() {
   if (DB_TYPE === 'postgres') {
     if (!postgresPool) {
-      console.log('🔌 Conectando a PostgreSQL local...');
+      const isNeon = DB_CONFIG.host && DB_CONFIG.host.includes('neon.tech');
+      console.log(`🔌 Conectando a PostgreSQL${isNeon ? ' (Neon)' : ' local'}...`);
       
-      // Configuración de conexión - intentar primero sin contraseña si está configurado trust
-      // Si falla, intentará con contraseña
+      // Configuración de conexión
       const poolConfig = {
         ...DB_CONFIG,
         // Configuraciones adicionales para manejar mejor la autenticación
         connectionTimeoutMillis: 5000,
         idleTimeoutMillis: 30000,
       };
+      
+      // Configurar SSL si está especificado (requerido para Neon)
+      if (DB_SSLMODE && DB_SSLMODE !== 'disable') {
+        poolConfig.ssl = DB_SSLMODE === 'require' 
+          ? { rejectUnauthorized: false } // Para Neon
+          : true; // Para otros casos
+      }
       
       postgresPool = new Pool(poolConfig);
       
@@ -88,10 +98,16 @@ function getDatabaseClient() {
             // Error de autenticación - intentar sin contraseña
             console.warn('⚠️  Error de autenticación con contraseña, intentando sin contraseña...');
             
+            // Solo intentar sin contraseña si no es Neon (Neon siempre requiere contraseña)
+            if (DB_CONFIG.host && DB_CONFIG.host.includes('neon.tech')) {
+              console.error('❌ Neon requiere autenticación. Verifica las credenciales en .env');
+              return;
+            }
+            
             // Cerrar pool anterior
             postgresPool.end().catch(() => {});
             
-            // Crear nuevo pool sin contraseña
+            // Crear nuevo pool sin contraseña (solo para local)
             const poolConfigNoPassword = {
               ...poolConfig,
               password: undefined,
